@@ -1,10 +1,25 @@
-import React from "react";
+import type {JSX} from 'react'
+import { motion } from "framer-motion";
+import ExpandableCard from './ExpandableCard';
 
-export default function MainCard() {
+export default function MainCard():JSX.Element {
     return (
-        <div className="card-base">
-            <h1>Evan McLay | portfolio</h1>
-        </div>
+        <motion.div className="card-base"
+            initial={{opacity: 0, y: -50}}
+            animate={{opacity: 1, y: 0}}
+            transition={{duration: 1, delay:1}}
+        >
+            <header>
+                <h1>Evan McLay | portfolio</h1>
+            </header>
+            <div className="card-base-container">
+                <div className="index-cards-container">
+                    <ExpandableCard>
+                        <p>Expandable card example!</p>
+                    </ExpandableCard>
+                </div>
+            </div>
+        </motion.div>
         
     )
 }

@@ -1,11 +1,21 @@
-import React from 'react';
+import type {JSX} from 'react'
 import MainCard from './components/MainCard';
+import Layout from './components/Layout';
+import NotFound from './pages/NotFound';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
-function App() {
+function App():JSX.Element {
   return (
-    <div className="app-body">
-      <MainCard />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<MainCard />} />
+
+
+          <Route path="*" element={<NotFound />}/>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
