@@ -1,6 +1,7 @@
 import type {JSX} from 'react'
 import { motion } from "framer-motion";
 import ExpandableCard from './ExpandableCard';
+import Underline from './Underline';
 
 export default function MainCard():JSX.Element {
     return (
@@ -10,7 +11,9 @@ export default function MainCard():JSX.Element {
             transition={{duration: 1, delay:1}}
         >
             <header>
-                <h1>Evan McLay | portfolio</h1>
+                <Underline color="#242424">
+                    <h1>Evan McLay | portfolio</h1>
+                </Underline>
             </header>
             <div className="card-base-container">
                 <div className="index-cards-container">

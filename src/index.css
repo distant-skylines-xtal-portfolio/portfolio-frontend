@@ -52,6 +52,10 @@ h1 {
   font-weight: 400;
 }
 
+.card-base-container {
+  margin-top: 50px;
+}
+
 /* Expandable Cards */
 .card-expandable-border {
   border: 2px solid var(--color-secondary);
