@@ -2,6 +2,7 @@ import type {JSX} from 'react'
 import { motion } from "framer-motion";
 import ExpandableCard from './ExpandableCard';
 import Underline from './Underline';
+import RevealText from './RevealText';
 
 export default function MainCard():JSX.Element {
     return (
@@ -21,6 +22,8 @@ export default function MainCard():JSX.Element {
                         <p>Expandable card example!</p>
                     </ExpandableCard>
                 </div>
+
+                <RevealText text='Test' textClass='body-text'/>
             </div>
         </motion.div>
         
