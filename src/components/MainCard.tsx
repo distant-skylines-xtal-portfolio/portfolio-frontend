@@ -18,7 +18,7 @@ export default function MainCard():JSX.Element {
             </header>
             <div className="card-base-container">
                 <div className="index-cards-container">
-                    <ExpandableCard>
+                    <ExpandableCard cardId='mainTestCard'>
                         <p>Expandable card example!</p>
                     </ExpandableCard>
                 </div>
