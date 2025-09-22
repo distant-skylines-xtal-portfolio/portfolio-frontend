@@ -1,172 +1,103 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useEffect, useRef, useCallback} from 'react'
 import type {JSX} from 'react'
-import {AnimatePresence, animateVisualElement, motion} from "framer-motion";
-import { isExportAssignment } from 'typescript';
+import {motion, ViewportEventHandler} from "framer-motion";
+import { cardDimensionsType, ExpandableCardMethods } from '../types/ExpandableCard.types';
+import { CardPointsDebug } from './CardPointsDebug';
 
 type ExpandableCardProps = {
     children: React.ReactNode;
+    id: string;
+    width?: number;
+    height?: number;
     animDuration?: number;
     animDelay?: number;
     autoExpand?: boolean;
-    cardId: string;
+    className: string;
+    x: number;
+    y: number;
     onExpansionComplete?: (cardId: string, position: cardDimensionsType | null) => void;
-}
-
-type cardDimensionsType = {
-    center: {x: number, y: number};
-    width: number,
-    height: number,
-    top: number,
-    left: number,
-    connectionPoints: {
-        top: {x:number, y:number},
-        bottom: {x:number, y:number},
-        left: {x:number, y:number},
-        right: {x:number, y:number},
-    }
+    onCardClick?: () => void;
+    ref?: React.RefObject<ExpandableCardMethods | null>;
 }
 
 export default function ExpandableCard({children, 
         animDuration = 1,
-        animDelay = 3, 
-        autoExpand = true,
-        cardId,
-onExpansionComplete}: ExpandableCardProps):JSX.Element {
-    const [isExpanded, setIsExpanded] = React.useState(true);
-    const [hasFinishedExpanding, setHasFinishedExpanding] = React.useState(false);
-    const finalWidth = 400;
-    const finalHeight = 300;
-    const cardRef = useRef<HTMLDivElement>(null);
-    
-    function getCardDimensions():cardDimensionsType|null{
-        if (!cardRef.current) return null;
-        const rect = cardRef.current.getBoundingClientRect();
-
-        const center = {
-            x: rect.left + finalWidth / 2,
-            y: rect.top + finalHeight / 2,
-        };
-
-        const newDimensions:cardDimensionsType = {
-            center: center,
-            width: finalWidth,
-            height: finalHeight,
-            left: rect.left,
-            top: rect.top,
-            connectionPoints: {
-                top: {x:center.x, y:center.y - finalHeight / 2},
-                bottom: {x:center.x, y:center.y + finalHeight / 2},
-                left: {x:center.x - finalWidth / 2, y:center.y},
-                right: {x:center.x + finalWidth / 2, y:center.y},
-            }            
-        }
-
-        return newDimensions;
-    }
-    
-    function handleClick():void {
-        setIsExpanded((prev) => {return !prev});
-    }
+        animDelay = 0.3, 
+        autoExpand = false,
+        id,
+        ref,
+        x, y,
+        width=400, height=300,
+        className="",
+        onExpansionComplete, 
+        onCardClick
+}: ExpandableCardProps):JSX.Element {
+    const [isExpanded, setIsExpanded] = React.useState(false);
 
     useEffect(() => {
         if (autoExpand) {
             setIsExpanded(true);
         }
-    }, [])
+    }, [autoExpand]);
 
+    //Expose internal methods
     useEffect(() => {
-        !isExpanded && setHasFinishedExpanding(false); 
-    }, [isExpanded])
+        if (ref && 'current' in ref) {
+            ref.current = {
+                expand: () => setIsExpanded(true),
+                collapse: () => setIsExpanded(false),
+                toggle: () => setIsExpanded(prev => !prev),
+                isExpanded: () => isExpanded,
+            };
+        };
+    })
 
-    useEffect(() => {
-        if (isExpanded) {
-            const timer  = setTimeout(() => {
-                const newDimensions = getCardDimensions();
-                setHasFinishedExpanding(true);
-                onExpansionComplete?.(cardId, newDimensions);
-            }, (animDuration + animDelay) * 1000)
+    
+    // useEffect(() => {
+    //     if (isExpanded) {
+    //         const timer  = setTimeout(() => {
+    //             const newDimensions = getCardDimensions();
+    //             setHasFinishedExpanding(true);
+    //             onExpansionComplete?.(cardId, newDimensions);
+    //         }, (animDuration + animDelay) * 1000)
 
-            return () => clearTimeout(timer)
-        }
+    //         return () => clearTimeout(timer)
+    //     }
 
-    }, [isExpanded, animDelay, animDuration, cardId, onExpansionComplete])
-
-
-    const DebugOverlay = (positions: cardDimensionsType|null) => {
-        if (!positions) return null;
-
-        return (
-            <svg
-            style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                pointerEvents: 'none',
-                zIndex: 1000,
-            }}
-            >
-            {/* Connection point dots */}
-            <circle
-                cx={positions.connectionPoints.top.x}
-                cy={positions.connectionPoints.top.y}
-                r="4"
-                fill="red"
-            />
-            <circle
-                cx={positions.connectionPoints.right.x}
-                cy={positions.connectionPoints.right.y}
-                r="4"
-                fill="blue"
-            />
-            <circle
-                cx={positions.connectionPoints.bottom.x}
-                cy={positions.connectionPoints.bottom.y}
-                r="4"
-                fill="green"
-            />
-            <circle
-                cx={positions.connectionPoints.left.x}
-                cy={positions.connectionPoints.left.y}
-                r="4"
-                fill="yellow"
-            />
-            
-            {/* Center point for reference */}
-            <circle
-                cx={positions.center.x}
-                cy={positions.center.y}
-                r="6"
-                fill="purple"
-                fillOpacity="0.7"
-            />
-            </svg>
-        );
-    };
+    // }, [isExpanded, animDelay, animDuration, cardId, onExpansionComplete])
 
 
 
     return (
-        <motion.div className='card-expandable-border' ref={cardRef} 
-            initial={{width: 1, height: 1, 
-                    x: (finalWidth / 2 - 0.5),
-                    y: (finalHeight / 2 - 0.5),
+        <motion.div className='card-expandable-border' 
+            style={{
+                position: 'absolute',
+                left: x,
+                top: y,
+                cursor: 'pointer',
+                transformOrigin: 'center center',
+                zIndex: 10,
             }}
-            animate={isExpanded ? {width: finalWidth, height: finalHeight,
+            id={id}
+            initial={{width: 1, height: 1, 
+                    x: (width / 2 - 0.5),
+                    y: (height / 2 - 0.5),
+            }}
+            animate={isExpanded ? {width: width, height: height,
                     x: 0,
                     y: 0,
             } : {width: 1, height: 1, 
-                x: (finalWidth / 2 - 0.5),
-                y: (finalHeight / 2 - 0.5),
+                x: (width / 2 - 0.5),
+                y: (height / 2 - 0.5),
             }} 
             exit={{width: 1, height: 1, 
-                    x: (finalWidth / 2 - 0.5),
-                    y: (finalHeight / 2 - 0.5),
+                    x: (width / 2 - 0.5),
+                    y: (height / 2 - 0.5),
             }}
             transition={{duration: animDuration, delay: isExpanded? animDelay : animDuration}}
-            style={{originX:0.5, originY:0.5, cursor:'pointer'}}
-            onClick={handleClick}
+
+            onClick={() => {onCardClick?.()}}
+            
         >
             
             <motion.div className='card-expandable-content'
@@ -191,11 +122,7 @@ onExpansionComplete}: ExpandableCardProps):JSX.Element {
                         </motion.div>
                     )
                 }
-                {hasFinishedExpanding && DebugOverlay(getCardDimensions())}
             </motion.div>
-            
-            
-            
         </motion.div>
     )
 }
