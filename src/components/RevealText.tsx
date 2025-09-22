@@ -5,7 +5,9 @@ import type {JSX} from 'react'
 import { getRandomCharEng } from "../utils/randomCharacters"
 import { useReducedMotion } from "framer-motion"
 
-type revealTextTypes = {
+type textElementType = 'normal' | 'title';
+
+type revealTextProps = {
     text: string,
     textClass: string,
     durationNextChar?: number,
@@ -14,15 +16,17 @@ type revealTextTypes = {
     initialDelay?: number,
     revealMultipleChars?: boolean,
     autoStart?: boolean,
+    elementType?: textElementType
     onComplete?: () => void,
     onCharacterRevealed?: (index: number, char: string) => void,
+    
 }
 
 type timeoutId = ReturnType<typeof setTimeout> | undefined;
 
 type timersRefType = {
     progress: timeoutId,
-    scramblers: Map<number, timeoutId>
+    scramblers: Map<string, timeoutId>
 }
 
 export default function RevealText({
@@ -30,32 +34,33 @@ export default function RevealText({
     numberOfScramblePerChar=5, durationNextChar=500, initialDelay=100, 
     durationPerChar=50,
     revealMultipleChars=true, autoStart=true, 
-    onComplete, onCharacterRevealed}: revealTextTypes):JSX.Element {
+    elementType='normal',
+    onComplete, onCharacterRevealed
+}: revealTextProps):JSX.Element {
         
     const shouldReduceMotion = useReducedMotion();
+    
+    const [displayedText, setDisplayedText] = React.useState(Array.from({length: text.length}, () => ""));
+    const [isAnimating, setIsAnimating] = React.useState(false);
+    const [hasStarted, setHasStarted] = React.useState(false);
+
+    const timersRef = useRef<timersRefType>({progress: undefined, scramblers: new Map()});
+    const completedCharsRef = useRef<Set<number>>(new Set());
     
     useEffect(() => {
         if (shouldReduceMotion) {
             setDisplayedText(Array.from(text));
             setIsAnimating(false);
+            onComplete?.();
             return;
         }
-    }, [shouldReduceMotion, text])
-            
-    const [displayedText, setDisplayedText] = React.useState(Array.from({length: text.length}, () => ""));
-    const [currentIndex, setCurrentIndex] = React.useState(0);
-    const [isAnimating, setIsAnimating] = React.useState(true);
-
-    const timersRef = useRef<timersRefType>({progress: undefined, scramblers: new Map()});
-
-    
+    }, [shouldReduceMotion, text, onComplete])
     
     const clearAllTimers = useCallback(() => {
-        console.log("clear all timers!")
         if (timersRef.current.progress) {
             clearTimeout(timersRef.current.progress);
+            timersRef.current.progress = undefined;
         }
-        
         
         if (timersRef.current.scramblers) {
             timersRef.current.scramblers.forEach(scrambler => {
@@ -63,98 +68,116 @@ export default function RevealText({
                     clearTimeout(scrambler);
                 } 
             })
-            
             timersRef.current.scramblers.clear();
         }
-        
     }, []);
     
     const startAnimation = useCallback(() => {
+        if (hasStarted) return;
+        
         setIsAnimating(true);
-        setCurrentIndex(0);
-    }, []);
+        setHasStarted(true);
+        completedCharsRef.current.clear();
+        
+        const startScrambling = (charIndex: number) => {
+            const scramble = (currentScrambleCount: number) => {
+                // Display a random character if we are under the scramblePerChar count
+                if (currentScrambleCount < numberOfScramblePerChar) {
+                    setDisplayedText(prev => {
+                        const newText = [...prev];
+                        newText[charIndex] = getRandomCharEng();
+                        return newText;
+                    });
+
+                    const timerId = setTimeout(() => {
+                        scramble(currentScrambleCount + 1);
+                    }, durationPerChar);
+                    
+                    timersRef.current.scramblers.set(`${charIndex}-${currentScrambleCount}`, timerId);
+                } else {
+                    // Final character reveal
+                    setDisplayedText(prev => {
+                        const newText = [...prev];
+                        newText[charIndex] = text[charIndex];
+                        return newText;
+                    });
+                    
+                    completedCharsRef.current.add(charIndex);
+                    onCharacterRevealed?.(charIndex, text[charIndex]);
+                    
+                    // Check if all characters are complete
+                    if (completedCharsRef.current.size === text.length) {
+                        setIsAnimating(false);
+                        onComplete?.();
+                    }
+                }
+            };
+
+            scramble(0);
+        };
+
+        const processCharacter = (charIndex: number) => {
+            if (charIndex >= text.length) {
+                return;
+            }
+            
+            console.log(`Process Next char: ${charIndex}, char: ${text[charIndex]}`);
+            
+            startScrambling(charIndex);
+
+            // Schedule next character
+            const nextCharDelay = revealMultipleChars ? durationNextChar : numberOfScramblePerChar * durationPerChar;
+            
+            timersRef.current.progress = setTimeout(() => {
+                processCharacter(charIndex + 1);
+            }, nextCharDelay);
+        };
+
+        processCharacter(0);
+    }, [text, numberOfScramblePerChar, durationPerChar, durationNextChar, revealMultipleChars, onComplete, onCharacterRevealed, hasStarted]);
     
     const stopAnimation = useCallback(() => {
         clearAllTimers();
         setIsAnimating(false);
-    }, [clearAllTimers])
+        setHasStarted(false);
+    }, [clearAllTimers]);
     
     const skipToEnd = useCallback(() => {
         clearAllTimers();
         setDisplayedText(Array.from(text));
         setIsAnimating(false);
-        onComplete?. ();
-    }, [clearAllTimers, text, onComplete])
-    
+        setHasStarted(false);
+        onComplete?.();
+    }, [clearAllTimers, text, onComplete]);
+
     useEffect(() => {
-        const getNextCharDelay = () => {
-            return revealMultipleChars 
-                ? CharacterData 
-                : numberOfScramblePerChar * durationPerChar
-        }
-        if (currentIndex >= text.length || !autoStart) {
-            return;
-        }
-        
-        const startScrambling = (charIndex: number) => {
+        if (autoStart && !shouldReduceMotion) {
+            const timer = setTimeout(() => {
+                startAnimation();
+            }, initialDelay);
             
-            const scramble = (currentScrambleCount: number) => {
-                
-                //Display a random character if we under the scramblePerChar cound
-                //otherwise just display the correct char.
-                if (currentScrambleCount < numberOfScramblePerChar) {
-                    
-                    setDisplayedText(prev => {
-                        let newText = [...prev];
-                        newText[charIndex] = getRandomCharEng();
-                        return newText;
-                    });
-
-                    timersRef.current.scramblers.set(charIndex, 
-                        setTimeout(() => {scramble(currentScrambleCount + 1)}, 
-                        durationPerChar));
-                } else {
-                    setDisplayedText(prev => {
-                        let newText = [...prev];
-                        newText[charIndex] = text[charIndex];
-                        return newText;
-                    })
-                }
-                
-            }
-
-            scramble(0);
+            return () => clearTimeout(timer);
         }
-
-        const processCharacter = (charIndex: number) => {
-            if (charIndex >= text.length) {
-                timersRef.current.progress = setTimeout(() => {
-                    setIsAnimating(false);
-
-                }, numberOfScramblePerChar * durationPerChar);
-                return;
-            }
-            
-            startScrambling(charIndex);
-            timersRef.current.progress = setTimeout(() => {
-                    
-                timersRef.current.progress = setTimeout(() => {
-                    setCurrentIndex(charIndex + 1);
-                    processCharacter(charIndex + 1);
-                }, durationNextChar)
-            
-
-            }, initialDelay)
-        }
-
-        processCharacter(currentIndex);
-
+    }, [autoStart, initialDelay, startAnimation, shouldReduceMotion]);
+    
+    // Cleanup on unmount
+    useEffect(() => {
         return clearAllTimers;
-    }, [text, isAnimating, clearAllTimers, currentIndex, durationPerChar, 
-        revealMultipleChars, initialDelay, numberOfScramblePerChar, durationNextChar, autoStart
-    ])
+    }, [clearAllTimers]);
+
+    // Reset when text changes
+    useEffect(() => {
+        setDisplayedText(Array.from({length: text.length}, () => ""));
+        setHasStarted(false);
+        completedCharsRef.current.clear();
+        clearAllTimers();
+    }, [text, clearAllTimers]);
+
+    if (elementType === 'title') {
+        return <h1 className={textClass}>{displayedText.join('')}</h1>;
+    }
 
     return (
         <p className={textClass}>{displayedText.join('')}</p>
-    )
+    );
 }
