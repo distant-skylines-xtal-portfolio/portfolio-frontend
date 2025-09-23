@@ -121,7 +121,6 @@ export default function RevealText({
                 return;
             }
             
-            console.log(`Process Next char: ${charIndex}, char: ${text[charIndex]}`);
             
             startScrambling(charIndex);
 
