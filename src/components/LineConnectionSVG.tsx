@@ -47,8 +47,8 @@ export default function LineConnectionSVG({
                             initial={{pathLength: 0}}
                             animate={{pathLength: connection.animated ? 1 : 0}}
                             transition={{
-                                duration: connection.animated ? 3: 0,
-                                ease: "easeInOut",
+                                duration: connection.animated ? 1: 0,
+                                ease: "easeOut",
                                 onComplete: connection.onComplete
                             }}
                         />
