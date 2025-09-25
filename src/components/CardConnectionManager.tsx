@@ -52,7 +52,7 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
         if (!element) return {x: 0, y: 0};
 
         const rect = element.getBoundingClientRect();
-        const container = element.closest('.card-container');
+        const container = element.closest('.card-canvas');
         const containerRect = container?.getBoundingClientRect();
 
         if (!containerRect) return {x: 0, y: 0};
@@ -119,7 +119,7 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
         <div className="card-container"
             style={{position: 'relative', 
                 width: '100%', 
-                height: '100vh',
+                height: '100%',
                 overflow: 'hidden'}}>
         {
             titleCards.map((titleCard) => (
@@ -136,7 +136,7 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
                     onCardClick={() => handleProjectClick(titleCard.id)}
                     className='title-card'
                 >
-                    <div style={{padding:"20px"}}>
+                    <div style={{padding:"20px", pointerEvents:'none'}}>
                         <RevealText text={titleCard.title} 
                         textClass="card-title-text" 
                         autoStart={true}

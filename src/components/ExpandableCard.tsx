@@ -103,7 +103,7 @@ export default function ExpandableCard({children,
                 top: y,
                 cursor: 'pointer',
                 transformOrigin: 'center center',
-                zIndex: 10,
+                zIndex: 100,
             }}
             id={id}
             initial={{width: 1, height: 1, 
