@@ -1,8 +1,11 @@
-import { useRef, useState, createRef, RefObject, ReactNode } from "react"
-import { Connection, cardDimensionsType, ExpandableCardMethods } from "../types/ExpandableCard.types"
+import { useRef, useState, createRef} from "react"
+import { Connection, ExpandableCardMethods, ExtraCardMethods } from "../types/ExpandableCard.types"
 import ExpandableCard from "./ExpandableCard";
 import LineConnectionSVG from "./LineConnectionSVG";
 import RevealText from "./RevealText";
+import { Point } from "framer-motion";
+import { getCardData } from "../data/DetailCardData";
+import ExtraCards from "./ExtraCards";
 
 type cardConnectionManagerProps = {
     children?: React.ReactNode,
@@ -11,8 +14,10 @@ type cardConnectionManagerProps = {
 type titleCard = {
     id: string;
     title: string;
+    body: string;
 
-    position: {x: number; y: number};
+    position: Point;
+    size: {width: number; height: number};
 };
 
 export default function CardConnectionManager({children}: cardConnectionManagerProps) {
@@ -22,28 +27,55 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
     //Card refs
     const titleCardRefs = useRef<Map<string, React.RefObject<ExpandableCardMethods | null>>>(new Map());
     const detailCardRef = useRef<ExpandableCardMethods>(null);
+    const extraCardRef = useRef<ExtraCardMethods>(null);
+
+    function getTitleCardPosition(index: number, height: number):Point {
+        const x = 50;
+        const y = (index + 1) * (height + 25);
+        return {x, y};
+    }
 
     const titleCards: titleCard[] = [
         {
             id: 'about',
             title: 'About',
-            position: {x: 50, y: 100},
+            body: '',
+            position: getTitleCardPosition(0, 75),
+            size: {width: 300, height: 75},
         },
         {
-            id: 'projects',
-            title: 'Projects',
-            position: {x: 50, y: 250},
+            id: 'projects-webpages',
+            title: 'projects - webpages',
+            body: 'See webpages/webapps',
+            position: getTitleCardPosition(1, 75),
+            size: {width: 300, height: 75},
+        },
+        {
+            id: 'projects-threeJS',
+            title: 'projects - threeJS',
+            body: 'See experiments/components made in threeJS',
+            position: getTitleCardPosition(2, 75),
+            size: {width: 300, height: 75},
+        },
+        {
+            id: 'experience',
+            title: 'Past Experience',
+            body: 'See past work',
+            position: getTitleCardPosition(3, 75),
+            size: {width: 300, height: 75},
         },
         {
             id: 'contact',
             title: 'Contact',
-            position: {x: 50, y: 400},
+            body: '',
+            position: getTitleCardPosition(4, 75),
+            size: {width: 300, height: 75},
         },
     ]
 
     //TODO: take into account window size changing
-    const detailCardPosition = {x: 600, y: 250};
-    const detailCardSize = {x: 400, y: 300};
+    const detailCardPosition = {x: 700, y: 50};
+    const detailCardSize = {width: 550, height: 600};
 
 
     //Get connection point for card
@@ -91,6 +123,9 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
         
         if (activeConnection !== null) {
             detailCardRef.current?.collapse();
+            extraCardRef.current?.collapseAll();
+            
+
             setActiveConnection(null);
             const timer = setTimeout(() => {
                 playConnectionAnim(cardId);
@@ -115,6 +150,21 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
         return titleCardRefs.current.get(cardId);
     }
 
+    function getDetailCardElements(cardId: string | null) {
+        if (!cardId) {
+            console.log('Selected card has no Id!');
+            return <></>;
+        }
+        const cardData = getCardData(cardId);
+
+        if (!cardData) {
+            console.log('Selected card has no data!');
+            return <></>
+        } else {
+            return cardData.data;
+        }
+    }
+
     return (
         <div className="card-container"
             style={{position: 'relative', 
@@ -129,21 +179,35 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
                     ref={getProjectRef(titleCard.id)}
                     x={titleCard.position.x}
                     y={titleCard.position.y}
-                    width={300}
-                    height={120}
+                    width={titleCard.size.width}
+                    height={titleCard.size.height}
                     autoExpand={true}
                     animDelay={0.5}
                     onCardClick={() => handleProjectClick(titleCard.id)}
                     className='title-card'
                 >
-                    <div style={{padding:"20px", pointerEvents:'none'}}>
-                        <RevealText text={titleCard.title} 
-                        textClass="card-title-text" 
-                        autoStart={true}
-                        durationPerChar={50}
-                        durationNextChar={100}
-                        initialDelay={5000}></RevealText>
-                        <h3 style={{margin:'0'}}></h3>
+                    <div 
+                        style={{padding:"2px", pointerEvents:'none'}}
+                        className='card-title-content'
+                    >
+                        <div className="card-title-text">
+                            <RevealText text={titleCard.title} 
+                            textClass="card-title-text" 
+                            autoStart={true}
+                            durationPerChar={50}
+                            durationNextChar={100}
+                            initialDelay={5000}></RevealText>
+
+                            <RevealText text={titleCard.body} 
+                            textClass="card-title-body" 
+                            autoStart={true}
+                            durationPerChar={50}
+                            durationNextChar={100}
+                            initialDelay={5000}></RevealText>
+                        </div>
+                        <div className='card-title-arrow'>
+                            <span>▶</span>
+                        </div>
                     </div>
                 </ExpandableCard>
             ))
@@ -154,15 +218,22 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
             ref={detailCardRef}
             x={detailCardPosition.x}
             y={detailCardPosition.y}
-            width={400}
-            height={300}
+            width={detailCardSize.width}
+            height={detailCardSize.height}
             autoExpand={false}
+            usePointerEvents={false}
             className="detail-card"
         >
             <div style={{padding: '20px', textAlign:'center'}}>
-                {selectedCard ? (<p>{`Card ${selectedCard}`}</p>) : (<p>No Card Selected</p>)}
+                {selectedCard ? (<></>) : (<p>No Card Selected</p>)}
+                {
+                    getDetailCardElements(selectedCard)
+                }
             </div>
         </ExpandableCard>
+        
+        <ExtraCards cardId={selectedCard} ref={extraCardRef}/>
+
 
         <LineConnectionSVG connections={activeConnection ? [activeConnection] : []} />
         </div>

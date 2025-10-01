@@ -24,6 +24,10 @@ export type ExpandableCardMethods = {
   isExpanded: () => boolean;
 };
 
+export type ExtraCardMethods = {
+  collapseAll: () => void;
+}
+
 export type Connection = {
   from: Point;
   to: Point;
