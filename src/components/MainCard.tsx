@@ -41,7 +41,7 @@ export default function MainCard():JSX.Element {
                 </div>
             </header>
             <div className="card-base-container">
-                <div className="card-canvas">
+                <div className="card-canvas" id="card-canvas">
                     <CardConnectionManager></CardConnectionManager>
                 </div>
 

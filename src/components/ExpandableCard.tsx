@@ -11,9 +11,11 @@ type ExpandableCardProps = {
     animDuration?: number;
     animDelay?: number;
     autoExpand?: boolean;
+    usePointerEvents?: boolean,
     className: string;
     x: number;
     y: number;
+    zIndex?: number;
     onExpansionComplete?: (cardId: string, position: cardDimensionsType | null) => void;
     onCardClick?: () => void;
     ref?: React.RefObject<ExpandableCardMethods | null>;
@@ -28,9 +30,11 @@ export default function ExpandableCard({children,
         animDuration = 0.5,
         animDelay = 0.3, 
         autoExpand = false,
+        usePointerEvents = true,
         id,
         ref,
         x, y,
+        zIndex=100,
         width=400, height=300,
         className="",
         onExpansionComplete, 
@@ -41,7 +45,6 @@ export default function ExpandableCard({children,
     const [clickWaves, setClickWaves] = React.useState<WaveAnimation[]>([]);
 
     const borderOffset = 5;
-    const aspectRatio = width / height;
     const waveAnimLength = 1.5;
     //Check for auto expand
     useEffect(() => {
@@ -101,9 +104,9 @@ export default function ExpandableCard({children,
                 position: 'absolute',
                 left: x,
                 top: y,
-                cursor: 'pointer',
+                cursor: usePointerEvents ? 'pointer' : 'default',
                 transformOrigin: 'center center',
-                zIndex: 100,
+                zIndex: zIndex,
             }}
             id={id}
             initial={{width: 1, height: 1, 
@@ -157,7 +160,7 @@ export default function ExpandableCard({children,
 
             {/* Hover & click border */}
             {
-                expansionComplete && (
+                expansionComplete && usePointerEvents && (
                 <motion.div id='hover-border' 
                     style={{
                         position: 'absolute',
@@ -187,7 +190,7 @@ export default function ExpandableCard({children,
 
             {/* Click waves */}
             <AnimatePresence>
-                {expansionComplete && clickWaves.map((wave, index) => (
+                {expansionComplete && usePointerEvents && clickWaves.map((wave, index) => (
                     <React.Fragment key={wave.id}>
                         {/* Wave 1 */}
                         <motion.div

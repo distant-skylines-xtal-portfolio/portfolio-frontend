@@ -25,6 +25,7 @@ export default function LineConnectionSVG({
 
     return (
         <svg 
+            className="svg-container"
             style={{
                 position: 'absolute',
                 top: 0,

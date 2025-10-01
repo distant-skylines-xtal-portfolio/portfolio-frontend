@@ -10,7 +10,7 @@ function App():JSX.Element {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<MainCard />} />
-    
+          
 
           <Route path="*" element={<NotFound />}/>
         </Route>

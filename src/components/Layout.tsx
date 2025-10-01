@@ -6,9 +6,11 @@ import { Outlet } from "react-router-dom"
 export default function Layout():JSX.Element {
     return (
         <div className="site-wrapper">
-            <main>
-                <Outlet />
-            </main>
+            <div id='background-canvas' className="background-canvas">
+                <main>
+                    <Outlet />
+                </main>               
+            </div>
         </div>
     )
 }
