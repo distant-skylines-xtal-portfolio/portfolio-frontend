@@ -85,7 +85,7 @@ export default function RevealText({
                 if (currentScrambleCount < numberOfScramblePerChar) {
                     setDisplayedText(prev => {
                         const newText = [...prev];
-                        newText[charIndex] = getRandomCharEng();
+                        newText[charIndex] = getRandomCharEng(false);
                         return newText;
                     });
 
@@ -149,6 +149,20 @@ export default function RevealText({
         onComplete?.();
     }, [clearAllTimers, text, onComplete]);
 
+    function getFormattedText():JSX.Element[] {
+        const joinedText = displayedText.join('');
+        const splitLength = joinedText.split('\n').length;
+        return joinedText.split('\n').map((line, index) => {
+            
+                return <p className={textClass}>
+                    {line}
+                    {index < splitLength && <br />}
+                </p>
+            
+            
+        })
+    }
+
     useEffect(() => {
         if (autoStart && !shouldReduceMotion) {
             const timer = setTimeout(() => {
@@ -177,6 +191,8 @@ export default function RevealText({
     }
 
     return (
-        <p className={textClass}>{displayedText.join('')}</p>
+        <div>
+            {getFormattedText()}
+        </div>
     );
 }

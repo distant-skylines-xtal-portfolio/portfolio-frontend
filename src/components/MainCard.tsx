@@ -11,18 +11,13 @@ export default function MainCard():JSX.Element {
             initial={{opacity: 0, y: -50}}
             animate={{opacity: 1, y: 0}}
             transition={{duration: 1, delay:1}}
+            
         >
             <header>
-                <div className='header-title'>
+                <div className='header-title' style={{zIndex:100}}>
                     <Underline color="#242424">
                         <h1>Evan McLay | Portfolio</h1>                    
                     </Underline>
-                    <RevealText text='Test' textClass='body-text' 
-                    revealMultipleChars={true} 
-                    durationNextChar={300}
-                    durationPerChar={50}
-                    numberOfScramblePerChar={4}
-                    />  
                 </div>
                 <div className="dropdown-container">
                     <DropdownCard
