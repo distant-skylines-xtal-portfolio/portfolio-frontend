@@ -40,7 +40,7 @@ jobs:
       - name: Checkout backend repo
         uses: actions/checkout@v4
         with:
-          repository: distant-skylines-xtal/portfolio-backend
+          repository: distant-skylines-xtal/distant-skylines-xtal-portfolio/portfolio-backend
           token: ${{ secrets.BACKEND_DEPLOY_TOKEN }}
           path: backend-repo
 
