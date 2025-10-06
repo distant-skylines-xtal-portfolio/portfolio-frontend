@@ -28,8 +28,12 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:analyze": "npm run build && source-map-explorer 'build/static/js/*.js'",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test:ci": "CI=true react-scripts test --coverage",
+    "eject": "react-scripts eject",
+    "serve": "serve -s build -l 3000",
+    "preview": "npm run build && npm run serve"
   },
   "eslintConfig": {
     "extends": [
@@ -52,10 +56,12 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/user-event": "^14.6.1",
+    "cross-env": "^10.1.0",
     "cypress": "^15.0.0",
     "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.5",
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "serve": "^14.2.5"
   }
 }
