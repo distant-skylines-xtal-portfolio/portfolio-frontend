@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, createRef } from "react"
+import React, { useEffect, useRef, createRef } from "react"
 import type {JSX} from 'react'
 import LiteYouTubeEmbed from "react-lite-youtube-embed"; 
 import ExpandableCard from "./ExpandableCard";
@@ -11,9 +11,7 @@ type ExtraCardsProps = {
 
 export default function ExtraCards({cardId, ref}:ExtraCardsProps):JSX.Element {
 
-    const [card, setCard] = useState('');
     const extraCardRefs = useRef<Map<string, React.RefObject<ExpandableCardMethods | null>>>(new Map());
-    const [extraCardPositions, setExtraCardPositions] = useState(new Map());
     //Expose internal methods
     useEffect(() => {
         if (ref && 'current' in ref) {
@@ -97,7 +95,6 @@ export default function ExtraCards({cardId, ref}:ExtraCardsProps):JSX.Element {
                         />
                     </ExpandableCard>
                 )
-                break;
         }
 
         return (<React.Fragment />)

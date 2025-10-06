@@ -1,6 +1,6 @@
 import React, {useEffect } from 'react'
 import type {JSX} from 'react'
-import {AnimatePresence, motion, useTime} from "framer-motion";
+import {AnimatePresence, motion } from "framer-motion";
 import { cardDimensionsType, ExpandableCardMethods } from '../types/ExpandableCard.types';
 
 type ExpandableCardProps = {
@@ -64,7 +64,7 @@ export default function ExpandableCard({children,
         }, (animDelay + animDuration) * 1000)
 
         return () => clearTimeout(expandCompleteTimer);
-    }, [isExpanded])
+    }, [isExpanded, animDelay, animDuration])
 
     //Expose internal methods
     useEffect(() => {
@@ -91,7 +91,7 @@ export default function ExpandableCard({children,
 
         setClickWaves(prev => [...prev, newWave]);
 
-        const deleteWaveTimeout = setTimeout(() => {
+        setTimeout(() => {
             setClickWaves(prev => prev.filter(wave => wave.id !== newWave.id));
         }, waveAnimLength * 1000)
 

@@ -2,7 +2,7 @@ import type {JSX} from 'react'
 import MainCard from './components/MainCard';
 import Layout from './components/Layout';
 import NotFound from './pages/NotFound';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
 function App():JSX.Element {

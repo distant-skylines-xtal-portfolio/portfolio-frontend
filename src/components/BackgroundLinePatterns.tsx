@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
 import type { Point } from "../types/ExpandableCard.types";
-import React, {useState, useEffect, useMemo, useRef} from "react";
+import {useState, useEffect, } from "react";
 import type {JSX} from 'react';
-import { NumberLiteralType } from "typescript";
 
 type MovingShape = {
     id: string;
@@ -38,7 +37,7 @@ export default function BackgroundLinePatterns({zIndex=49, yScreenPercentage=0.1
         window.addEventListener('resize', calculatePosition);
         
         return () => window.removeEventListener('resize', calculatePosition);
-    }, []);
+    }, [yScreenPercentage]);
 
 
     useEffect(() => {

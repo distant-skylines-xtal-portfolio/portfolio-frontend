@@ -127,7 +127,7 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
             
 
             setActiveConnection(null);
-            const timer = setTimeout(() => {
+            setTimeout(() => {
                 playConnectionAnim(cardId);
             }, 500)
             return;

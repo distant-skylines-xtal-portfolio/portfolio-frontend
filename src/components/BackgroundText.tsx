@@ -58,7 +58,7 @@ export default function BackroundText({zIndex=50,xScreenPercentage}:BackroundTex
             window.addEventListener('resize', calculatePosition);
             
             return () => window.removeEventListener('resize', calculatePosition);
-    }, []);
+    }, [xScreenPercentage]);
 
     useEffect(() => {
         const spawnInterval = setInterval(() => {

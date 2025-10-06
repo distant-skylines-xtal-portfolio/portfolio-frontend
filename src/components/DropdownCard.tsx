@@ -1,4 +1,4 @@
-import { AnimatePresence, defaultValueTypes } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import React, {useEffect, useRef, useState} from 'react'; 
 import { motion } from 'framer-motion';
 import { JSX } from 'react';
@@ -51,7 +51,7 @@ export default function DropdownCard({
         if (initialSelectedOption !== -1) {
             setSelectedOption(options[initialSelectedOption]);
         }
-    }, [])
+    }, [initialSelectedOption, options])
 
     function getOptionYOffset(index: number):number {
         if (index === 0) {
@@ -125,7 +125,7 @@ export default function DropdownCard({
                             style={{
                                 transformOrigin: 'center center',
                                 position: 'absolute',
-                                backgroundColor: (selectedOption == option ? 
+                                backgroundColor: (selectedOption === option ? 
                                     '#000000ff' : 
                                     '#5c5c58ff'
                                 ),

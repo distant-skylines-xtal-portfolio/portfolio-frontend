@@ -1,7 +1,6 @@
 import type {JSX} from 'react'
 import { motion } from "framer-motion";
 import Underline from './Underline';
-import RevealText from './RevealText';
 import CardConnectionManager from './CardConnectionManager';
 import DropdownCard from './DropdownCard';
 

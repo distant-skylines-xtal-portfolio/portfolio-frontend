@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useCallback} from 'react'
 import type {JSX} from 'react';
 import {motion} from "framer-motion";
 import { Point } from '../types/ExpandableCard.types';
@@ -19,20 +19,7 @@ type BackgroundHexagonsProps = {
     zIndex?: number
 }
 
-export default function BackgroundHexagons({zIndex=50}:BackgroundHexagonsProps): JSX.Element {
-    const [movingHexagons, setMovingHexagons] = useState<MovingHexagon[]>([]);
-
-    const hexagonSize = 100;
-    const gap = 10;
-    const strokeWidth = 4;
-    const strokeColor = '#000000';
-
-    const hexWidth = hexagonSize * 0.866;
-    const hexHeight = hexagonSize * 0.866;
-    const horizontalSpacing = hexWidth * 0.866 + gap;
-    const verticalSpacing = hexHeight + gap;
-
-    const initialHexagons: HexagonIndex[] = [
+const initialHexagons: HexagonIndex[] = [
         // Column 0
         { col: 0, row: 0 },
         { col: 0, row: 1 },
@@ -85,7 +72,7 @@ export default function BackgroundHexagons({zIndex=50}:BackgroundHexagonsProps):
         { col: 4, row: 7 },
     ]
     
-    const spawnPositions: HexagonIndex[] = [
+const spawnPositions: HexagonIndex[] = [
     { col: 3, row: 0 },
     { col: 3, row: 8 },
     { col: 3, row: 9 },
@@ -98,6 +85,21 @@ export default function BackgroundHexagons({zIndex=50}:BackgroundHexagonsProps):
     { col: 5, row: 5 },
     { col: 5, row: 6 },
     ];
+
+export default function BackgroundHexagons({zIndex=50}:BackgroundHexagonsProps): JSX.Element {
+    const [movingHexagons, setMovingHexagons] = useState<MovingHexagon[]>([]);
+
+    const hexagonSize = 100;
+    const gap = 10;
+    const strokeWidth = 4;
+    const strokeColor = '#000000';
+
+    const hexWidth = hexagonSize * 0.866;
+    const hexHeight = hexagonSize * 0.866;
+    const horizontalSpacing = hexWidth * 0.866 + gap;
+    const verticalSpacing = hexHeight + gap;
+
+    const getHexPositionCallback = useCallback(getHexPosition, [horizontalSpacing, verticalSpacing]);
 
     function getHexPosition(col: number, row: number) {
         const offsetY = col % 2 === 1 ? verticalSpacing / 2 : 0;
@@ -123,7 +125,7 @@ export default function BackgroundHexagons({zIndex=50}:BackgroundHexagonsProps):
     useEffect(() => {
         const interval = setInterval(() => {
             const randomSpawn = spawnPositions[Math.floor(Math.random() * spawnPositions.length)];
-            const startPos = getHexPosition(randomSpawn.col, randomSpawn.row);
+            const startPos = getHexPositionCallback(randomSpawn.col, randomSpawn.row);
             const filledIn = Math.random() > 0.5;
             const newHexagon: MovingHexagon = {
                 id: `moving-hexagon-${Date.now()}`,
@@ -136,7 +138,7 @@ export default function BackgroundHexagons({zIndex=50}:BackgroundHexagonsProps):
         }, 2500)
 
         return () => clearInterval(interval);
-    }, [])
+    }, [getHexPositionCallback])
 
     useEffect(() => {
         const cleanup = setInterval(() => {
@@ -159,7 +161,7 @@ export default function BackgroundHexagons({zIndex=50}:BackgroundHexagonsProps):
                 style={{position: 'absolute', top: 0, left: 0, opacity: 0.4, zIndex:zIndex}}
             >
                 {initialHexagons.map((hex, index) => {
-                    const pos = getHexPosition(hex.col, hex.row);
+                    const pos = getHexPositionCallback(hex.col, hex.row);
                     const path = getHexPath(pos.x, pos.y, hexagonSize);
                     
                     return (

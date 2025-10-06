@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from "react"
+import React, { useCallback, useEffect, useRef } from "react"
 import type {JSX} from 'react'
 
 
@@ -41,7 +41,7 @@ export default function RevealText({
     const shouldReduceMotion = useReducedMotion();
     
     const [displayedText, setDisplayedText] = React.useState(Array.from({length: text.length}, () => ""));
-    const [isAnimating, setIsAnimating] = React.useState(false);
+    //const [isAnimating, setIsAnimating] = React.useState(false);
     const [hasStarted, setHasStarted] = React.useState(false);
 
     const timersRef = useRef<timersRefType>({progress: undefined, scramblers: new Map()});
@@ -50,7 +50,7 @@ export default function RevealText({
     useEffect(() => {
         if (shouldReduceMotion) {
             setDisplayedText(Array.from(text));
-            setIsAnimating(false);
+            //setIsAnimating(false);
             onComplete?.();
             return;
         }
@@ -75,7 +75,7 @@ export default function RevealText({
     const startAnimation = useCallback(() => {
         if (hasStarted) return;
         
-        setIsAnimating(true);
+        //setIsAnimating(true);
         setHasStarted(true);
         completedCharsRef.current.clear();
         
@@ -107,7 +107,7 @@ export default function RevealText({
                     
                     // Check if all characters are complete
                     if (completedCharsRef.current.size === text.length) {
-                        setIsAnimating(false);
+                        //setIsAnimating(false);
                         onComplete?.();
                     }
                 }
@@ -135,19 +135,19 @@ export default function RevealText({
         processCharacter(0);
     }, [text, numberOfScramblePerChar, durationPerChar, durationNextChar, revealMultipleChars, onComplete, onCharacterRevealed, hasStarted]);
     
-    const stopAnimation = useCallback(() => {
-        clearAllTimers();
-        setIsAnimating(false);
-        setHasStarted(false);
-    }, [clearAllTimers]);
+    // const stopAnimation = useCallback(() => {
+    //     clearAllTimers();
+    //     //setIsAnimating(false);
+    //     setHasStarted(false);
+    // }, [clearAllTimers]);
     
-    const skipToEnd = useCallback(() => {
-        clearAllTimers();
-        setDisplayedText(Array.from(text));
-        setIsAnimating(false);
-        setHasStarted(false);
-        onComplete?.();
-    }, [clearAllTimers, text, onComplete]);
+    // const skipToEnd = useCallback(() => {
+    //     clearAllTimers();
+    //     setDisplayedText(Array.from(text));
+    //     //setIsAnimating(false);
+    //     setHasStarted(false);
+    //     onComplete?.();
+    // }, [clearAllTimers, text, onComplete]);
 
     function getFormattedText():JSX.Element[] {
         const joinedText = displayedText.join('');
