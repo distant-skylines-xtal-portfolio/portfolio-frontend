@@ -1,4 +1,4 @@
-import { useRef, useState, createRef} from "react"
+import { useRef, useState, createRef, useEffect} from "react"
 import { Connection, ExpandableCardMethods, ExtraCardMethods } from "../types/ExpandableCard.types"
 import ExpandableCard from "./ExpandableCard";
 import LineConnectionSVG from "./LineConnectionSVG";
@@ -23,6 +23,7 @@ type titleCard = {
 export default function CardConnectionManager({children}: cardConnectionManagerProps) {
     const [activeConnection, setActiveConnection] = useState<Connection | null>(null);
     const [selectedCard, setSelectedCard] = useState<string | null>(null);
+    const [detailCardPosition, setDetailCardPosition] = useState<Point>({x: 0, y: 0});
 
     //Card refs
     const titleCardRefs = useRef<Map<string, React.RefObject<ExpandableCardMethods | null>>>(new Map());
@@ -73,9 +74,30 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
         },
     ]
 
-    //TODO: take into account window size changing
-    const detailCardPosition = {x: 700, y: 50};
-    const detailCardSize = {width: 550, height: 600};
+    const detailCardSize = useRef({width: 550, height: 600});
+
+    // Use effect to calculate detail card position based on size of the card canvas
+    useEffect(() => {
+            const calculatePosition = () => {
+                const cardCanvas = document.getElementById('card-canvas');
+                
+                if (!cardCanvas) {
+                    return;
+                }
+
+                const canvasRect = cardCanvas?.getBoundingClientRect();
+                const newPos = {
+                    x: (canvasRect.width - detailCardSize.current?.width - 50),
+                    y: detailCardSize.current?.height - (canvasRect.height / 2),
+                };
+                setDetailCardPosition(newPos);
+            };
+    
+            calculatePosition();
+            window.addEventListener('resize', calculatePosition);
+            
+            return () => window.removeEventListener('resize', calculatePosition);
+    }, [detailCardSize]);
 
 
     //Get connection point for card
@@ -139,6 +161,8 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
             titleCardRefs.current.set(cardId, createRef<ExpandableCardMethods>());
         }
 
+        
+
         playConnectionAnim(cardId);
     };
 
@@ -148,6 +172,16 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
         }
 
         return titleCardRefs.current.get(cardId);
+    }
+
+    function handleDetailCardCloseButtonClick() {
+        if (activeConnection !== null) {
+            detailCardRef.current?.collapse();
+            extraCardRef.current?.collapseAll();
+            
+
+            setActiveConnection(null);
+        }
     }
 
     function getDetailCardElements(cardId: string | null) {
@@ -187,7 +221,7 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
                     className='title-card'
                 >
                     <div 
-                        style={{padding:"2px", pointerEvents:'none'}}
+                        style={{padding:"5px", pointerEvents:'none'}}
                         className='card-title-content'
                     >
                         <div className="card-title-text">
@@ -198,12 +232,12 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
                             durationNextChar={100}
                             initialDelay={5000}></RevealText>
 
-                            <RevealText text={titleCard.body} 
+                            {titleCard.body !== '' && <RevealText text={titleCard.body} 
                             textClass="card-title-body" 
                             autoStart={true}
                             durationPerChar={50}
                             durationNextChar={100}
-                            initialDelay={5000}></RevealText>
+                            initialDelay={5000}></RevealText>}
                         </div>
                         <div className='card-title-arrow'>
                             <span>▶</span>
@@ -218,12 +252,18 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
             ref={detailCardRef}
             x={detailCardPosition.x}
             y={detailCardPosition.y}
-            width={detailCardSize.width}
-            height={detailCardSize.height}
+            width={detailCardSize.current?.width}
+            height={detailCardSize.current?.height}
             autoExpand={false}
             usePointerEvents={false}
             className="detail-card"
         >
+            <button className="card-close-button" 
+                id="button-detail-card-close"
+                onClick={handleDetailCardCloseButtonClick}
+            >
+                    X
+            </button>
             <div style={{padding: '20px', textAlign:'center'}}>
                 {selectedCard ? (<></>) : (<p>No Card Selected</p>)}
                 {
