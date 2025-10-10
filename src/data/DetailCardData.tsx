@@ -60,11 +60,11 @@ const cardData = new Map([
             </div>
             <div className="contact-block">
                 <h3>Linkedin: </h3>
-                <a href="www.linkedin.com/in/evan-mclay-3642a0106" rel="noreferrer" target="_blank" className="body-text">www.linkedin.com/in/evan-mclay-3642a0106</a>
+                <a href="https://www.linkedin.com/in/evan-mclay-3642a0106" rel="noreferrer" target="_blank" className="body-text-link">https://www.linkedin.com/in/evan-mclay-3642a0106</a>
             </div>
             <div className="contact-block">
                 <h3>Github: </h3>
-                <a href="https://github.com/Distant-Skyline-Xtal" rel="noreferrer" target="_blank" className="body-text">https://github.com/Distant-Skyline-Xtal</a>
+                <a href="https://github.com/Distant-Skyline-Xtal" rel="noreferrer" target="_blank" className="body-text-link">https://github.com/Distant-Skyline-Xtal</a>
             </div>
         </div>
         )

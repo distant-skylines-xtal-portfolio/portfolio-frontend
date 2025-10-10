@@ -1,4 +1,4 @@
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, ViewportEventHandler } from 'framer-motion';
 import React, {useEffect, useRef, useState} from 'react'; 
 import { motion } from 'framer-motion';
 import { JSX } from 'react';
@@ -15,6 +15,7 @@ type DropdownCardProps = {
     animDuration?: number,
     initialSelectedOption?: number,
     defaultText?: string,
+    onOptionSelect?: (option: string) => void;
 }
 
 export default function DropdownCard({
@@ -24,7 +25,8 @@ export default function DropdownCard({
     cardKey,
     animDuration=0.2,
     initialSelectedOption=-1,
-    defaultText='Select Option'
+    defaultText='Select Option',
+    onOptionSelect,
 }:DropdownCardProps):JSX.Element {
 
     const [isOpen, setIsOpen] = useState(false);
@@ -69,6 +71,7 @@ export default function DropdownCard({
         console.log(`selected option is: ${option}`)
         setSelectedOption(option);
         setIsOpen(false);
+        onOptionSelect?.(option);
     }
 
 

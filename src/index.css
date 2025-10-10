@@ -24,6 +24,8 @@ body {
   --color-primary: hsl(0, 0%, 60%);
   --color-secondary: hsl(0, 0%, 80%);
   --color-text: hsl(0, 0%, 100%);
+  --color-text-link: hsl(0, 0%, 100%);
+  --color-text-link-visited: hsl(61, 29%, 68%);
 }
 
 .site-wrapper {
@@ -42,6 +44,18 @@ main {
   position: 'relative';
   width: 100%;
   height: 100%;
+}
+
+.body-text {
+  size: 1rem;
+}
+
+.body-text-link {
+  color: var(--color-text-link);
+}
+
+.body-text-link:visited {
+  color: var(--color-text-link-visited);
 }
 
 /* Main Card */

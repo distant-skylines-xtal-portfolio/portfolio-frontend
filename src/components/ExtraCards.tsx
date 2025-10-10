@@ -37,7 +37,7 @@ export default function ExtraCards({cardId, ref}:ExtraCardsProps):JSX.Element {
         let position = {x: 0, y: desiredY};
         
         if (boundingRect.width >= 1800) {
-            position.x = 1200;
+            position.x = 600;
         } else if (boundingRect.width >= 1000) {
             position.x = 0;
         } else {

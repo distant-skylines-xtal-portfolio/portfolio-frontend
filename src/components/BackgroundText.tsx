@@ -101,7 +101,7 @@ export default function BackroundText({zIndex=50,xScreenPercentage}:BackroundTex
                         key={`random-moving-string-${randomString.timeStamp}`}
                         id={`random-moving-string-${randomString.timeStamp}`}
                         initial={{y: 0}}
-                        animate={{y: -window.innerHeight-100}}
+                        animate={{y: -window.innerHeight-200}}
                         transition={{
                             y: {duration: (scrollAnimDuration / 1000), ease:'linear'}
                         }}

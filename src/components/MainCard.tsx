@@ -3,8 +3,15 @@ import { motion } from "framer-motion";
 import Underline from './Underline';
 import CardConnectionManager from './CardConnectionManager';
 import DropdownCard from './DropdownCard';
+import { ThemeType, useTheme } from '../contexts/ThemeContext';
 
 export default function MainCard():JSX.Element {
+    const {setTheme} = useTheme();
+
+    function handleThemeChange(theme: string) {
+        setTheme(theme as ThemeType);
+    }
+
     return (
         <motion.div className="card-base"
             initial={{opacity: 0, y: -50}}
@@ -24,6 +31,7 @@ export default function MainCard():JSX.Element {
                         position={{x: 200, y: 0}}
                         defaultText='Select Theme'
                         initialSelectedOption={0}
+                        onOptionSelect={handleThemeChange}
                     ></DropdownCard>
                     <DropdownCard
                         cardKey='language-dropdown'
