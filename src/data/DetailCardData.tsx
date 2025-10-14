@@ -11,7 +11,7 @@ export function getCardData(cardId: string) {
 const cardData = new Map([
     ['about', {
         data: (
-        <div className="card-data-about" style={{textAlign: 'left'}}>
+        <div className="card-data card-data-about" style={{textAlign: 'left'}}>
             <p className="body-text">
                 Welcome to my portfolio! I'm a software developer based in Osaka, Japan. I originally 
                 studied 3D graphics programming/game development at Abertay University, Dundee, and 
@@ -27,7 +27,7 @@ const cardData = new Map([
     }],
     ['experience', {
         data: (
-        <div className="card-data-experience" style={{textAlign: 'left'}}>
+        <div className="card-data card-data-experience" style={{textAlign: 'left'}}>
             <h3>Immerse - Senior Unity Developer (2020-2025)</h3>
             <p className="body-text">
                 At Immerse I worked as a member of the solutions team. This involved working on many projects covering a range of
@@ -53,7 +53,7 @@ const cardData = new Map([
     }],
     ['contact', {
         data: (
-        <div className="card-data-contact" style={{textAlign: 'left'}}>
+        <div className="card-data card-data-contact" style={{textAlign: 'left'}}>
             <div className="contact-block">
                 <h3>Email: </h3>
                 <p className="body-text">evanmclay24@gmail.com</p>

@@ -3,10 +3,12 @@ import {JSX} from 'react';
 
 export type ThemeType = 'default' | 'dark' | 'blue';
 
+type TransitionState = 'idle' | 'fadeIn' | 'transitioning' | 'fadeOut';
+
 type ThemeContextType = {
     currentTheme: ThemeType;
     setTheme: (theme:ThemeType) => void;
-    isTransitioning: boolean;
+    transitionState: TransitionState;
 };
 
 type ThemeProviderProps = {
@@ -18,19 +20,20 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export function ThemeProvider({children}:ThemeProviderProps):JSX.Element {
 
     const [currentTheme, setCurrentTheme] = useState<ThemeType>('default');
-    const [isTransitioning, setIsTransitioning] = useState(false);
+    const [transitionState, setTransitionState] = useState<TransitionState>('idle');
 
     function setTheme(newTheme: ThemeType) {
         if (newTheme === currentTheme) return;
 
-        setIsTransitioning(true);
-
-        setTimeout(() => {
+        setTransitionState('fadeIn');
+        
+        const fadeTimeout = setTimeout(() => {
             setCurrentTheme(newTheme);
+            setTransitionState('fadeOut');
             setTimeout(() => {
-                setIsTransitioning(false);
-            }, 500);
-        }, 500);
+                setTransitionState('idle');
+            }, 500)
+        }, 500)
     }
 
     useEffect(() => {
@@ -59,7 +62,9 @@ export function ThemeProvider({children}:ThemeProviderProps):JSX.Element {
     }, [currentTheme]);
 
     return (
-        <ThemeContext.Provider value={{currentTheme, setTheme, isTransitioning}}>
+        <ThemeContext.Provider value={{
+            currentTheme, setTheme, transitionState,
+            }}>
             {children}
         </ThemeContext.Provider>
     )

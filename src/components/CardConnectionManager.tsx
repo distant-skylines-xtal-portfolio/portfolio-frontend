@@ -6,6 +6,7 @@ import RevealText from "./RevealText";
 import { Point } from "framer-motion";
 import { getCardData } from "../data/DetailCardData";
 import ExtraCards from "./ExtraCards";
+import { calculateDetailCardPosition, calculateDetailCardSize } from "../utils/cardPositioningUtils";
 
 type cardConnectionManagerProps = {
     children?: React.ReactNode,
@@ -24,80 +25,93 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
     const [activeConnection, setActiveConnection] = useState<Connection | null>(null);
     const [selectedCard, setSelectedCard] = useState<string | null>(null);
     const [detailCardPosition, setDetailCardPosition] = useState<Point>({x: 0, y: 0});
+    const [detailCardSize, setDetailCardSize] = useState({width: 550, height: 600});
 
     //Card refs
     const titleCardRefs = useRef<Map<string, React.RefObject<ExpandableCardMethods | null>>>(new Map());
     const detailCardRef = useRef<ExpandableCardMethods>(null);
     const extraCardRef = useRef<ExtraCardMethods>(null);
-
-    function getTitleCardPosition(index: number, height: number):Point {
-        const x = 50;
-        const y = (index + 1) * (height + 25);
-        return {x, y};
-    }
-
+    
+    //Title card dimensions
+    const titleCardWidth = 300;
+    const titleCardHeight = 75;
+    const titleCardGap = 12;
     const titleCards: titleCard[] = [
         {
             id: 'about',
             title: 'About',
             body: '',
-            position: getTitleCardPosition(0, 75),
-            size: {width: 300, height: 75},
+            position: getTitleCardPosition(0),
+            size: {width: titleCardWidth, height: titleCardHeight},
         },
         {
             id: 'projects-webpages',
             title: 'projects - webpages',
             body: 'See webpages/webapps',
-            position: getTitleCardPosition(1, 75),
-            size: {width: 300, height: 75},
+            position: getTitleCardPosition(1),
+            size: {width: titleCardWidth, height: titleCardHeight},
         },
         {
             id: 'projects-threeJS',
             title: 'projects - threeJS',
             body: 'See experiments/components made in threeJS',
-            position: getTitleCardPosition(2, 75),
-            size: {width: 300, height: 75},
+            position: getTitleCardPosition(2),
+            size: {width: titleCardWidth, height: titleCardHeight},
         },
         {
             id: 'experience',
             title: 'Past Experience',
             body: 'See past work',
-            position: getTitleCardPosition(3, 75),
-            size: {width: 300, height: 75},
+            position: getTitleCardPosition(3),
+            size: {width: titleCardWidth, height: titleCardHeight},
         },
         {
             id: 'contact',
             title: 'Contact',
             body: '',
-            position: getTitleCardPosition(4, 75),
-            size: {width: 300, height: 75},
+            position: getTitleCardPosition(4),
+            size: {width: titleCardWidth, height: titleCardHeight},
         },
     ]
 
-    const detailCardSize = useRef({width: 550, height: 600});
+    // Calculate the vertical span of title cards
+    const firstTitleCardY = getTitleCardPosition(0).y;
+    const lastTitleCardIndex = titleCards.length - 1;
+    const lastTitleCardY = getTitleCardPosition(lastTitleCardIndex).y;
+    const titleCardsVerticalSpan = {
+        top: firstTitleCardY,
+        bottom: lastTitleCardY + titleCardHeight
+    };
+    const titleCardsMiddle = (titleCardsVerticalSpan.top + titleCardsVerticalSpan.bottom) / 2;
+
+
+
+    function getTitleCardPosition(index: number):Point {
+        const x = 50;
+        let y = (index + 1) * (titleCardHeight);
+        y += index > 0 ? (index * titleCardGap) : 0;
+        return {x, y};
+    }
+
+
 
     // Use effect to calculate detail card position based on size of the card canvas
     useEffect(() => {
-            const calculatePosition = () => {
-                const cardCanvas = document.getElementById('card-canvas');
-                
-                if (!cardCanvas) {
-                    return;
-                }
+            const calculateDimensions = () => {
+                const newSize = calculateDetailCardSize(titleCardWidth);
+                const newPosition = calculateDetailCardPosition(titleCardWidth, 
+                    titleCardsMiddle, newSize
+                );
 
-                const canvasRect = cardCanvas?.getBoundingClientRect();
-                const newPos = {
-                    x: (canvasRect.width - detailCardSize.current?.width - 50),
-                    y: detailCardSize.current?.height - (canvasRect.height / 2),
-                };
-                setDetailCardPosition(newPos);
-            };
+                setDetailCardPosition(newPosition);
+                setDetailCardSize(newSize);
+            }
     
-            calculatePosition();
-            window.addEventListener('resize', calculatePosition);
+            calculateDimensions();
+            window.addEventListener('resize', calculateDimensions);
             
-            return () => window.removeEventListener('resize', calculatePosition);
-    }, [detailCardSize]);
+            return () => window.removeEventListener('resize', calculateDimensions);
+    }, [titleCards.length]);
 
 
     //Get connection point for card
@@ -252,8 +266,8 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
             ref={detailCardRef}
             x={detailCardPosition.x}
             y={detailCardPosition.y}
-            width={detailCardSize.current?.width}
-            height={detailCardSize.current?.height}
+            width={detailCardSize.width}
+            height={detailCardSize.height}
             autoExpand={false}
             usePointerEvents={false}
             className="detail-card"
@@ -264,9 +278,9 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
             >
                     X
             </button>
-            <div style={{padding: '20px', textAlign:'center'}}>
+            <div style={{padding: '20px', paddingTop:'40px', textAlign:'center', height: '100%'}}>
                 {selectedCard ? (<></>) : (<p>No Card Selected</p>)}
-                {
+                {selectedCard &&
                     getDetailCardElements(selectedCard)
                 }
             </div>

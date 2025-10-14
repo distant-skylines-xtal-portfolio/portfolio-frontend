@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function BackgroundComponentManager():JSX.Element {
 
-    const {currentTheme, isTransitioning} = useTheme();
+    const {currentTheme, transitionState} = useTheme();
 
     function getBackgroundComponents() {
         switch(currentTheme) {
@@ -33,7 +33,7 @@ export default function BackgroundComponentManager():JSX.Element {
 
     return (
         <AnimatePresence mode="wait">
-            {!isTransitioning && (
+            {transitionState !== 'fadeIn' && (
                 <motion.div
                     key={currentTheme}
                     style={{

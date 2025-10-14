@@ -1,5 +1,5 @@
-import { AnimatePresence, ViewportEventHandler } from 'framer-motion';
-import React, {useEffect, useRef, useState} from 'react'; 
+import { AnimatePresence } from 'framer-motion';
+import {useEffect, useMemo, useRef, useState} from 'react'; 
 import { motion } from 'framer-motion';
 import { JSX } from 'react';
 import { ExpandableCardMethods, Point } from '../types/ExpandableCard.types';
@@ -30,10 +30,11 @@ export default function DropdownCard({
 }:DropdownCardProps):JSX.Element {
 
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedOption, setSelectedOption] = useState<string>(""); 
+    const [selectedOption, setSelectedOption] = useState<string>(
+        initialSelectedOption !== -1 ? options[initialSelectedOption] : ""
+    ); 
     const dropdownExpandableCardRef = useRef<ExpandableCardMethods>(null);
     const parentDropdownRef = useRef<HTMLDivElement>(null);
-
     const cardGap = 5;
 
     const container = parentDropdownRef.current?.closest('.card-canvas');
@@ -50,10 +51,25 @@ export default function DropdownCard({
     }
 
     useEffect(() => {
-        if (initialSelectedOption !== -1) {
-            setSelectedOption(options[initialSelectedOption]);
+        if (!isOpen) {
+            return;
         }
-    }, [initialSelectedOption, options])
+
+        function handleMouseClickOutside(event: MouseEvent) {
+            if (parentDropdownRef.current && 
+                !parentDropdownRef.current.contains(event.target as Node)) {
+                    setIsOpen(false);
+                }
+        }
+
+        document.addEventListener('mousedown', handleMouseClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleMouseClickOutside);
+        }
+    }, [isOpen])
+
+
 
     function getOptionYOffset(index: number):number {
         if (index === 0) {

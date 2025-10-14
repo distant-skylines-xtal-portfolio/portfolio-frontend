@@ -1,13 +1,13 @@
 import {motion, AnimatePresence, animate} from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
-import {JSX} from 'react'
+import {JSX, useState} from 'react'
 
 export default function ThemeTransition():JSX.Element {
-    const {isTransitioning} = useTheme();
+    const {transitionState} = useTheme();
 
     return (
         <AnimatePresence>
-            {isTransitioning && (
+            {transitionState === 'fadeIn' && (
                 <motion.div
                     style={{
                         position: 'fixed',
@@ -21,7 +21,53 @@ export default function ThemeTransition():JSX.Element {
                     }}
                     initial={{opacity: 0}}
                     animate={{opacity: 1}}
-                    transition={{duration: 0.5, ease:'easeInOut'}}
+                    transition={{
+                        duration: 0.5, 
+                        ease:'easeInOut',
+                        repeat: 1,
+                        repeatType: 'reverse',
+                    }}
+                >
+
+                </motion.div>
+            )}
+            {transitionState === 'transitioning' && (
+                <motion.div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: '#000000',
+                        zIndex: 9999,
+                        pointerEvents: 'none'
+                    }}
+                    initial={{opacity: 1}}
+                >
+
+                </motion.div>
+            )}
+            {transitionState === 'fadeOut' && (
+                <motion.div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: '#000000',
+                        zIndex: 9999,
+                        pointerEvents: 'none'
+                    }}
+                    initial={{opacity: 1}}
+                    animate={{opacity: 0}}
+                    transition={{
+                        duration: 0.5, 
+                        ease:'easeInOut',
+                        repeat: 1,
+                        repeatType: 'reverse',
+                    }}
                 >
 
                 </motion.div>

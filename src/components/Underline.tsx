@@ -14,7 +14,7 @@ type underlineProps = {
 export default function Underline({
     children,
     thickness = 2,
-    color = '#000000',
+    color = '#ffffffff',
     duration = 1,
     trigger = 'auto',
     autoDelay = 2000,

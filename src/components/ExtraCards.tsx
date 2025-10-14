@@ -12,6 +12,7 @@ type ExtraCardsProps = {
 export default function ExtraCards({cardId, ref}:ExtraCardsProps):JSX.Element {
 
     const extraCardRefs = useRef<Map<string, React.RefObject<ExpandableCardMethods | null>>>(new Map());
+    const videoCardWidth = 360;
     //Expose internal methods
     useEffect(() => {
         if (ref && 'current' in ref) {
@@ -81,8 +82,8 @@ export default function ExtraCards({cardId, ref}:ExtraCardsProps):JSX.Element {
                         x={videoCardPos.x}
                         y={videoCardPos.y}
                         zIndex={150}
-                        width={640}
-                        height={362}
+                        width={videoCardWidth}
+                        height={videoCardWidth * 0.57}
                         autoExpand={true}
                         usePointerEvents={false}
                         className="extra-card"

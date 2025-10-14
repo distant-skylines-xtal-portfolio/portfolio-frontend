@@ -4,12 +4,24 @@ import Underline from './Underline';
 import CardConnectionManager from './CardConnectionManager';
 import DropdownCard from './DropdownCard';
 import { ThemeType, useTheme } from '../contexts/ThemeContext';
+import { Point } from '../types/ExpandableCard.types';
 
 export default function MainCard():JSX.Element {
     const {setTheme} = useTheme();
 
+    const dropdownCardWidth = 150;
+    const dropdownCardGap = 25;
+
     function handleThemeChange(theme: string) {
         setTheme(theme as ThemeType);
+    }
+
+    function calculateDropdownPosition(index:number):Point {
+        
+        let xPos = ((index) * dropdownCardWidth);
+        xPos += index > 0 ? (index * dropdownCardGap) : 0;
+
+        return {x: xPos, y: 10};
     }
 
     return (
@@ -28,7 +40,8 @@ export default function MainCard():JSX.Element {
                     <DropdownCard
                         cardKey='theme-dropdown'
                         options={['default', 'dark', 'blue']}
-                        position={{x: 200, y: 0}}
+                        position={calculateDropdownPosition(0)}
+                        cardWidth={dropdownCardWidth}
                         defaultText='Select Theme'
                         initialSelectedOption={0}
                         onOptionSelect={handleThemeChange}
@@ -36,7 +49,8 @@ export default function MainCard():JSX.Element {
                     <DropdownCard
                         cardKey='language-dropdown'
                         options={['English', '日本語']}
-                        position={{x: 450, y: 0}}
+                        position={calculateDropdownPosition(1)}
+                        cardWidth={dropdownCardWidth}
                         initialSelectedOption={0}
                     ></DropdownCard>       
                 </div>
