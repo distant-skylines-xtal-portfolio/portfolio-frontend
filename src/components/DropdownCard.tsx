@@ -1,5 +1,5 @@
 import { AnimatePresence } from 'framer-motion';
-import {useEffect, useMemo, useRef, useState} from 'react'; 
+import {useEffect, useRef, useState} from 'react'; 
 import { motion } from 'framer-motion';
 import { JSX } from 'react';
 import { ExpandableCardMethods, Point } from '../types/ExpandableCard.types';
@@ -15,6 +15,7 @@ type DropdownCardProps = {
     animDuration?: number,
     initialSelectedOption?: number,
     defaultText?: string,
+    alwaysDisplayDefaultText?: boolean,
     onOptionSelect?: (option: string) => void;
 }
 
@@ -26,6 +27,7 @@ export default function DropdownCard({
     animDuration=0.2,
     initialSelectedOption=-1,
     defaultText='Select Option',
+    alwaysDisplayDefaultText=false,
     onOptionSelect,
 }:DropdownCardProps):JSX.Element {
 
@@ -120,7 +122,7 @@ export default function DropdownCard({
                 >
                     {selectedOption === "" ? 
                         <span>{defaultText} {isOpen ? '▲' : '▼'}</span> :
-                        <span>{selectedOption} {isOpen ? '▲' : '▼'}</span>
+                        <span>{alwaysDisplayDefaultText ? defaultText + ': ' + selectedOption : selectedOption} {isOpen ? '▲' : '▼'}</span>
                     }
                     
                 </div>

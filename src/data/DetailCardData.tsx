@@ -69,4 +69,22 @@ const cardData = new Map([
         </div>
         )
     }],
+    ['projects-webpages', {
+        data: (
+            <div className="card-data card-data-about" style={{textAlign: 'left'}}>
+                <p className="body-text">
+                    To be added!
+                </p>
+            </div>
+        )
+    }],
+    ['projects-threejs', {
+        data: (
+            <div className="card-data card-data-about" style={{textAlign: 'left'}}>
+                <p className="body-text">
+                    To be added!
+                </p>
+            </div>
+        )
+    }],
 ]);

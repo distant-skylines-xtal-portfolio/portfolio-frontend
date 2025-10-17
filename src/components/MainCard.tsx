@@ -19,7 +19,7 @@ export default function MainCard():JSX.Element {
     function calculateDropdownPosition(index:number):Point {
         
         let xPos = ((index) * dropdownCardWidth);
-        xPos += index > 0 ? (index * dropdownCardGap) : 0;
+        xPos += index > 0 ? (index * dropdownCardGap) + 100 : 0;
 
         return {x: xPos, y: 10};
     }
@@ -32,7 +32,7 @@ export default function MainCard():JSX.Element {
         >
             <header>
                 <div className='header-title' style={{zIndex:100}}>
-                    <Underline color="#242424">
+                    <Underline color="hsl(0, 0%, 100%)">
                         <h1>Evan McLay | Portfolio</h1>                    
                     </Underline>
                 </div>
@@ -41,9 +41,10 @@ export default function MainCard():JSX.Element {
                         cardKey='theme-dropdown'
                         options={['default', 'dark', 'blue']}
                         position={calculateDropdownPosition(0)}
-                        cardWidth={dropdownCardWidth}
+                        cardWidth={250}
                         defaultText='Select Theme'
                         initialSelectedOption={0}
+                        alwaysDisplayDefaultText={true}
                         onOptionSelect={handleThemeChange}
                     ></DropdownCard>
                     <DropdownCard

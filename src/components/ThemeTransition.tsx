@@ -1,6 +1,6 @@
-import {motion, AnimatePresence, animate} from 'framer-motion';
+import {motion, AnimatePresence} from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
-import {JSX, useState} from 'react'
+import {JSX} from 'react'
 
 export default function ThemeTransition():JSX.Element {
     const {transitionState} = useTheme();

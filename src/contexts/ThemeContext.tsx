@@ -27,7 +27,7 @@ export function ThemeProvider({children}:ThemeProviderProps):JSX.Element {
 
         setTransitionState('fadeIn');
         
-        const fadeTimeout = setTimeout(() => {
+        setTimeout(() => {
             setCurrentTheme(newTheme);
             setTransitionState('fadeOut');
             setTimeout(() => {
@@ -48,8 +48,8 @@ export function ThemeProvider({children}:ThemeProviderProps):JSX.Element {
                 break;
             case 'dark':
                 root.style.setProperty('--color-background', 'hsl(0, 0%, 10%)');
-                root.style.setProperty('--color-primary', 'hsl(0, 0%, 20%)');
-                root.style.setProperty('--color-secondary', 'hsl(210, 20%, 40%)');
+                root.style.setProperty('--color-primary', 'hsla(130, 100%, 11%, 1.00)');
+                root.style.setProperty('--color-secondary', 'hsla(125, 100%, 12%, 1.00)');
                 root.style.setProperty('--color-text', 'hsl(0, 0%, 90%)');
                 break;
             case 'blue':

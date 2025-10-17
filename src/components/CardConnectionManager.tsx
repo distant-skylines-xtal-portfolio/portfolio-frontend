@@ -74,17 +74,6 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
         },
     ]
 
-    // Calculate the vertical span of title cards
-    const firstTitleCardY = getTitleCardPosition(0).y;
-    const lastTitleCardIndex = titleCards.length - 1;
-    const lastTitleCardY = getTitleCardPosition(lastTitleCardIndex).y;
-    const titleCardsVerticalSpan = {
-        top: firstTitleCardY,
-        bottom: lastTitleCardY + titleCardHeight
-    };
-    const titleCardsMiddle = (titleCardsVerticalSpan.top + titleCardsVerticalSpan.bottom) / 2;
-
-
 
     function getTitleCardPosition(index: number):Point {
         const x = 50;
@@ -98,9 +87,12 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
     // Use effect to calculate detail card position based on size of the card canvas
     useEffect(() => {
             const calculateDimensions = () => {
+                const canvasElement = document.getElementById('card-canvas');
+                const canvasRect = canvasElement?.getBoundingClientRect();
+                const newY = canvasRect ? canvasRect.height / 2 : window.innerHeight / 2;
                 const newSize = calculateDetailCardSize(titleCardWidth);
                 const newPosition = calculateDetailCardPosition(titleCardWidth, 
-                    titleCardsMiddle, newSize
+                    newY, newSize
                 );
 
                 setDetailCardPosition(newPosition);

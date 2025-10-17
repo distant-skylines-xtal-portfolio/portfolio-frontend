@@ -161,13 +161,15 @@ export default function ExpandableCard({children,
             {/* Hover & click border */}
             {
                 expansionComplete && usePointerEvents && (
-                <motion.div id='hover-border' 
+                <motion.div 
+                    key={`hover-border-${Math.random()}`}
+                    id={`hover-border-${Math.random()}`}
                     style={{
                         position: 'absolute',
                         left: 0,
                         top: 0,
                         backgroundColor: 'transparent',
-                        border: '3px solid white'
+                        border: '3px solid white',
                     }}
                     initial={{width: width + borderOffset, height: height + borderOffset, opacity: 0,
                         x: -borderOffset / 2 - 1,

@@ -1,9 +1,6 @@
 import type {JSX} from 'react'
 
 import { Outlet } from "react-router-dom"
-import BackgroundHexagons from "./BackgroundHexagons"
-import BackgroundLinePatterns from "./BackgroundLinePatterns"
-import BackroundText from "./BackgroundText"
 import BackgroundComponentManager from './BackgroundComponentManager'
 import ThemeTransition from './ThemeTransition'
 

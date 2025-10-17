@@ -1,0 +1,112 @@
+/* Wave animation */
+.gradient-waves {
+    background-image: linear-gradient(-45deg,
+        #8a8a8a, 
+        #7e7e7e,
+        #818181, 
+        #525252,
+        #838383);
+    background-size: 400% 400%;
+    animation: gradientWaves linear infinite;
+}
+
+@keyframes gradientWaves {
+    0% {
+        background-position: 0% 50%;
+    }
+    25% {
+        background-position: 25% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    75% {
+        background-position: 75% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Radial gradient animation */
+.gradient-radial {
+    background-image: radial-gradient(
+        circle at 50% 50%,
+        #5a5a5a, 
+        #858585,
+        #969696, 
+        #4b4b4b,
+        #5a5a5a
+    );
+    background-size: 200% 200%;
+    animation: gradientRadial ease-in-out infinite;
+}
+
+@keyframes gradientRadial {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+/* Mesh gradient animation (multiple radial gradients) */
+.gradient-mesh {
+    background-image: 
+        radial-gradient(at 0% 0%, hsla(0, 0%, 35%, 0.5) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, hsl(0, 0%, 0%) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, hsla(0, 0%, 33%, 0.5) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, hsla(0, 0%, 30%, 0.5) 0px, transparent 50%);
+    background-color: hsl(0, 0%, 0%);
+    animation: gradientMesh linear infinite;
+}
+
+@keyframes gradientMesh {
+    0%, 100% {
+        background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%;
+    }
+    25% {
+        background-position: 50% 0%, 100% 50%, 50% 100%, 0% 50%;
+    }
+    50% {
+        background-position: 100% 0%, 100% 100%, 0% 100%, 0% 0%;
+    }
+    75% {
+        background-position: 50% 100%, 0% 50%, 50% 0%, 100% 50%;
+    }
+}
+
+/* Theme-specific variations */
+:root[data-theme="dark"] .gradient-waves {
+    background-image: linear-gradient(
+        -45deg,
+        hsl(220, 20%, 15%) 0%,
+        hsl(220, 20%, 20%) 25%,
+        hsl(220, 25%, 18%) 50%,
+        hsl(220, 20%, 20%) 75%,
+        hsl(220, 20%, 15%) 100%
+    );
+}
+
+:root[data-theme="dark"] .gradient-mesh {
+    background-image: 
+        radial-gradient(at 0% 0%, hsla(0, 0%, 0%, 0.5) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, hsla(0, 0%, 16%, 0.5) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, hsla(0, 0%, 63%, 0.5) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, hsla(0, 0%, 30%, 0.5) 0px, transparent 50%);
+}
+
+:root[data-theme="blue"] .gradient-waves {
+    background-image: linear-gradient(
+        -45deg,
+        hsl(210, 50%, 25%) 0%,
+        hsl(210, 50%, 30%) 25%,
+        hsl(210, 55%, 35%) 50%,
+        hsl(210, 50%, 30%) 75%,
+        hsl(210, 50%, 25%) 100%
+    );
+}
