@@ -9,8 +9,8 @@ Tech used:
 - HTML
 - Framer
 
-To get it setup just download the repo and run 
-npm install
+To get it setup just download the repo and run <br />
+npm install<br />
 
-To start the development server run 
-npm start
+To start the development server run <br />
+npm start<br />
