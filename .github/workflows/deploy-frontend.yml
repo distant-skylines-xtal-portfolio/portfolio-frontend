@@ -23,7 +23,7 @@ jobs:
           cache: 'npm'
 
       #Install dependencies
-      - name: Install dependences
+      - name: Install dependencies
         run: npm ci
 
       # Run tests
@@ -44,10 +44,19 @@ jobs:
           token: ${{ secrets.BACKEND_DEPLOY_TOKEN }}
           path: backend-repo
 
-      #Copy build to backend's public folder
+      #Copy build to backend's public folder (EXCLUDING apps subfolder)
       - name: Copy build to backend
         run: |
-          rm -rf backend-repo/public/*
+          # Create apps directory if it doesn't exist
+          mkdir -p backend-repo/public/apps
+          
+          # Remove specific portfolio files/folders
+          rm -rf backend-repo/public/index.html
+          rm -rf backend-repo/public/assets
+          rm -rf backend-repo/public/static
+          
+          
+          # Copy new build files to public root
           cp -r build/* backend-repo/public/
 
       #Commit and push to backend repo
@@ -57,7 +66,5 @@ jobs:
           git config user.name "Github Actions Bot"
           git config user.email "actions@github.com"
           git add public/
-          git diff-index --quiet HEAD || git commit -m "Deploy frontend build from ${{ github.sha }}"
+          git diff-index --quiet HEAD || git commit -m "Deploy portfolio frontend from ${{ github.sha }}"
           git push
-      
-        
