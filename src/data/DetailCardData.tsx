@@ -1,3 +1,5 @@
+import { ProjectInfo } from "../components/ProjectInfoContainer";
+
 export {};
 
 export function getCardData(cardId: string) {
@@ -72,9 +74,21 @@ const cardData = new Map([
     ['projects-webpages', {
         data: (
             <div className="card-data card-data-about" style={{textAlign: 'left'}}>
-                <p className="body-text">
-                    To be added!
-                </p>
+                <ProjectInfo
+                    title="Game Recommender webapp"
+                    description="Tag-based game recommender built as a single-page webapp. Create a custom search using various tags as filters, and search the IGDB for relevant games."
+                    links={[
+                        { label: "Webpage", url: "https://evanmclay.dev/apps/game-recommender/" },
+                        { label: "Github", url: "https://github.com/distant-skylines-xtal-portfolio/portfolio-game-recommender" }
+                    ]}
+                    technologies={[
+                        "React Router",
+                        "Next JS",
+                        "TypeScript",
+                        "Axios",
+                        "Framer Motion"
+                    ]}
+                />
             </div>
         )
     }],

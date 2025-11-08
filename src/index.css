@@ -212,8 +212,73 @@ svg {
   justify-content: center;
 }
 
-.background-text {
-  
+.project-info-container {
+  width: 100%;
+  height: fit-content;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding-bottom: 12px;
+}
+
+.project-info-container {
+  border-bottom: 1px solid var(--color-primary);
+}
+
+.project-info-list {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-wrap: wrap;
+
+  width: 100%;
+  height: fit-content;
+}
+
+.project-info-pill {
+  background-color: var(--color-text-link-visited);
+  border-radius: 8px;
+  border: none;
+  padding: 4px;
+  color: var(--color-background);
+}
+
+.project-info-links {
+  width: 100%;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.project-info-link {
+  background-color: var(--color-background);
+  border: none;
+  padding: 4px;
+}
+
+.latest-container {
+  margin-top: 8px;
+  border: 1px solid white;
+  padding: 8px;
+  background-color: var(--color-background);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.latest-link {
+  border-radius: 8px;
+  width: fit-content;
+  padding: 8px;
+  color: white;
+}
+
+.latest-link-text {
+  color: var(--color-text-link-visited);
 }
 
 /* YouTube Lite Embedding */

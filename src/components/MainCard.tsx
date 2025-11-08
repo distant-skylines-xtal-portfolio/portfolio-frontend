@@ -35,6 +35,19 @@ export default function MainCard():JSX.Element {
                     <Underline color="hsl(0, 0%, 100%)">
                         <h1>Evan McLay | Portfolio</h1>                    
                     </Underline>
+                    <div className='latest-container'>
+                    <h3>Latest Project: </h3>
+                        <div className="latest-link">
+                            <a 
+                                href='https://evanmclay.dev/apps/game-recommender/'
+                                rel="noreferrer" 
+                                target="_blank" 
+                                className="latest-link-text"
+                            >
+                                Game Recommender Webapp
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <div className="dropdown-container">
                     <DropdownCard
