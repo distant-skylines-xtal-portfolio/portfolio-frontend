@@ -35,6 +35,7 @@ export default function DropdownCard({
     const [selectedOption, setSelectedOption] = useState<string>(
         initialSelectedOption !== -1 ? options[initialSelectedOption] : ""
     ); 
+    const [selectedOptionIndex, setSelectedOptionIndex] = useState(initialSelectedOption);
     const dropdownExpandableCardRef = useRef<ExpandableCardMethods>(null);
     const parentDropdownRef = useRef<HTMLDivElement>(null);
     const cardGap = 5;
@@ -51,6 +52,10 @@ export default function DropdownCard({
         x: position.x + offset.x,
         y: position.y + offset.y,
     }
+
+    useEffect(() => {
+        setSelectedOption(options[selectedOptionIndex]);
+    }, [options])
 
     useEffect(() => {
         if (!isOpen) {
@@ -86,8 +91,8 @@ export default function DropdownCard({
     }
 
     function handleOptionClick(option:string, index:number) {
-        console.log(`selected option is: ${option}`)
         setSelectedOption(option);
+        setSelectedOptionIndex(index);
         setIsOpen(false);
         onOptionSelect?.(option);
     }
@@ -138,7 +143,7 @@ export default function DropdownCard({
                         height: cardHeight,
                     }}
                     >
-                    <AnimatePresence mode='wait'>
+                    <AnimatePresence>
                     { isOpen && options.map((option, index) => (
                         <motion.div
                             key={`${cardKey}-option-${option}`}

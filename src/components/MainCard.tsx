@@ -5,15 +5,33 @@ import CardConnectionManager from './CardConnectionManager';
 import DropdownCard from './DropdownCard';
 import { ThemeType, useTheme } from '../contexts/ThemeContext';
 import { Point } from '../types/ExpandableCard.types';
+import { useTranslation } from 'react-i18next';
 
 export default function MainCard():JSX.Element {
+    const {t, i18n} = useTranslation();
     const {setTheme} = useTheme();
 
     const dropdownCardWidth = 150;
     const dropdownCardGap = 25;
 
-    function handleThemeChange(theme: string) {
-        setTheme(theme as ThemeType);
+    function handleThemeChange(translatedTheme: string) {
+
+        const themeMap: Record<string, ThemeType> = {
+            [t('themes.default')]: 'default',
+            [t('themes.dark')]: 'dark',
+            [t('themes.blue')]: 'blue',
+        }
+
+        const newTheme = themeMap[translatedTheme];
+        if (newTheme) {
+            setTheme(newTheme as ThemeType);
+        }
+    }
+
+    function handleLanguageChange(language: string) {
+        console.log(`handleLanguageChanged: ${language}`)
+        const langCode = language === 'English' ? 'en' : 'ja';
+        i18n.changeLanguage(langCode);
     }
 
     function calculateDropdownPosition(index:number):Point {
@@ -36,7 +54,7 @@ export default function MainCard():JSX.Element {
                         <h1>Evan McLay | Portfolio</h1>                    
                     </Underline>
                     <div className='latest-container'>
-                    <h3>Latest Project: </h3>
+                    <h3>{t('header.latestProject.title')}</h3>
                         <div className="latest-link">
                             <a 
                                 href='https://evanmclay.dev/apps/game-recommender/'
@@ -44,7 +62,7 @@ export default function MainCard():JSX.Element {
                                 target="_blank" 
                                 className="latest-link-text"
                             >
-                                Game Recommender Webapp
+                                {t('header.latestProject.body')}
                             </a>
                         </div>
                     </div>
@@ -52,20 +70,28 @@ export default function MainCard():JSX.Element {
                 <div className="dropdown-container">
                     <DropdownCard
                         cardKey='theme-dropdown'
-                        options={['default', 'dark', 'blue']}
+                        options={[
+                            t('themes.default'), 
+                            t('themes.dark'), 
+                            t('themes.blue')
+                        ]}
                         position={calculateDropdownPosition(0)}
                         cardWidth={250}
-                        defaultText='Select Theme'
+                        defaultText={t('header.selectTheme')}
                         initialSelectedOption={0}
                         alwaysDisplayDefaultText={true}
                         onOptionSelect={handleThemeChange}
                     ></DropdownCard>
                     <DropdownCard
                         cardKey='language-dropdown'
-                        options={['English', '日本語']}
+                        options={[
+                            t('languages.english'), 
+                            t('languages.japanese')
+                        ]}
                         position={calculateDropdownPosition(1)}
                         cardWidth={dropdownCardWidth}
                         initialSelectedOption={0}
+                        onOptionSelect={handleLanguageChange}
                     ></DropdownCard>       
                 </div>
             </header>

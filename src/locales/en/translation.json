@@ -1,0 +1,62 @@
+{
+  "header": {
+    "title": "Evan McLay | Portfolio",
+    "selectTheme": "Select Theme",
+    "selectLanguage": "Select Language",
+    "latestProject": {
+      "title": "Latest Project",
+      "body": "Game Recommender Webapp"
+    }
+  },
+  "cards": {
+    "about": {
+      "title": "About",
+      "content": "Welcome to my portfolio! I'm a software developer based in Osaka, Japan. I originally studied 3D graphics programming/game development at Abertay University, Dundee, and after graduating worked in 3D development, primarily within the VR industry.\n\nI have recently been expanding my skills into web development, primarily focusing on front-end.\n\nThis website contains information on my past professional experience, as well as more recent projects using web development technologies."
+    },
+    "projectsWeb": {
+      "title": "projects - webpages",
+      "body": "See webpages/webapps",
+      "gameRecommender": {
+        "title": "Game Recommender Webapp",
+        "body": "Tag-based game recommender built as a single-page webapp. Create a custom search using various tags as filters, and search the IGDB for relevant games."
+      }
+    },
+    "projectsThree": {
+      "title": "projects - threeJS",
+      "body": "See experiments/components made in threeJS"
+    },
+    "experience": {
+      "title": "Past Experience",
+      "body": "See past work",
+      "immerse": {
+        "title": "Immerse - Senior Unity Developer (2020-2025)",
+        "description": "At Immerse I worked as a member of the solutions team. This involved working on many projects covering a range of industries and clients. These projects were for developing 3D VR applications for various purposes, usually for workplace process training, but also for marketing, education and workplace health and safety. These applications were both single and multi-user, supported VR and WebGL platforms and were in multiple languages."
+      },
+      "symphony": {
+        "title": "Symphony Retail AI - Unity Developer (2016 - 2020)",
+        "description": "I worked as a Unity Developer as part of the Symphony Retail AI Innovation studio to primarily develop 3D visualization software of retail environments in a small team. This work involves not just Desktop/WebGL Unity development but also back-end Database (SQL Server) work."
+      }
+    },
+    "contact": {
+      "title": "Contact",
+      "email": "Email:",
+      "linkedin": "Linkedin:",
+      "github": "Github:"
+    }
+  },
+  "common": {
+    "close": "X",
+    "noCardSelected": "No Card Selected",
+    "links": "Links",
+    "tech": "Technologies"
+  },
+  "themes": {
+    "default": "default",
+    "dark": "dark",
+    "blue": "blue"
+  },
+  "languages": {
+    "english": "English",
+    "japanese": "日本語"
+  }
+}

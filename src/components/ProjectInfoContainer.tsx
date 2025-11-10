@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 type ProjectLink = {
     label: string;
@@ -20,6 +21,8 @@ export function ProjectInfo({
     technologies,
     animationDelay = 0
 }: ProjectInfoProps) {
+    const {t} = useTranslation();
+
     return (
         <motion.div
             className="project-info-container"
@@ -34,7 +37,7 @@ export function ProjectInfo({
             </p>
             
             <div className="project-info-links">
-                <p className="project-info-header">Links: </p>
+                <p className="project-info-header">{t('common.links')}</p>
                 {links.map((link, index) => (
                     <div key={`${link.label}-${index}`} className="project-info-link">
                         <a 
@@ -50,7 +53,7 @@ export function ProjectInfo({
             </div>
             
             <div className="project-info-list">
-                <p>Technologies: </p>
+                <p>{t('common.tech')}</p>
                 {technologies.map((tech, index) => (
                     <span key={`${tech}-${index}`} className="project-info-pill">
                         {tech}

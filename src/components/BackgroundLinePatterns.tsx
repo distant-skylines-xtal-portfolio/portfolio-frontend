@@ -29,7 +29,6 @@ export default function BackgroundLinePatterns({zIndex=49, yScreenPercentage=0.1
             const backgroundRect = backgroundCanvas?.getBoundingClientRect();
             const newPos = backgroundRect ? (backgroundRect.bottom - (backgroundRect.height * yScreenPercentage)) : 
                 window.innerHeight * 0.9;
-            console.log(`newPos: ${newPos}`);
             setFirstRowPos(newPos);
         };
 

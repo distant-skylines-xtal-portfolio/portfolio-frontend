@@ -4,9 +4,10 @@ import ExpandableCard from "./ExpandableCard";
 import LineConnectionSVG from "./LineConnectionSVG";
 import RevealText from "./RevealText";
 import { Point } from "framer-motion";
-import { getCardData } from "../data/DetailCardData";
+import { getCardData, useCardData } from "../data/DetailCardData";
 import ExtraCards from "./ExtraCards";
 import { calculateDetailCardPosition, calculateDetailCardSize } from "../utils/cardPositioningUtils";
+import { useTranslation } from "react-i18next";
 
 type cardConnectionManagerProps = {
     children?: React.ReactNode,
@@ -14,14 +15,15 @@ type cardConnectionManagerProps = {
 
 type titleCard = {
     id: string;
-    title: string;
-    body: string;
+    titleKey: string;
+    bodyKey?: string;
 
     position: Point;
     size: {width: number; height: number};
 };
 
 export default function CardConnectionManager({children}: cardConnectionManagerProps) {
+    const { t } = useTranslation();
     const [activeConnection, setActiveConnection] = useState<Connection | null>(null);
     const [selectedCard, setSelectedCard] = useState<string | null>(null);
     const [detailCardPosition, setDetailCardPosition] = useState<Point>({x: 0, y: 0});
@@ -36,39 +38,38 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
     const titleCardWidth = 300;
     const titleCardHeight = 75;
     const titleCardGap = 12;
+
     const titleCards: titleCard[] = [
         {
             id: 'about',
-            title: 'About',
-            body: '',
+            titleKey: 'cards.about.title',
             position: getTitleCardPosition(0),
             size: {width: titleCardWidth, height: titleCardHeight},
         },
         {
             id: 'projects-webpages',
-            title: 'projects - webpages',
-            body: 'See webpages/webapps',
+            titleKey: 'cards.projectsWeb.title',
+            bodyKey: 'cards.projectsWeb.body',
             position: getTitleCardPosition(1),
             size: {width: titleCardWidth, height: titleCardHeight},
         },
         {
             id: 'projects-threeJS',
-            title: 'projects - threeJS',
-            body: 'See experiments/components made in threeJS',
+            titleKey: 'cards.projectsThree.title',
+            bodyKey: 'cards.projectsThree.body',
             position: getTitleCardPosition(2),
             size: {width: titleCardWidth, height: titleCardHeight},
         },
         {
             id: 'experience',
-            title: 'Past Experience',
-            body: 'See past work',
+            titleKey: 'cards.experience.title',
+            bodyKey: 'cards.experience.body',
             position: getTitleCardPosition(3),
             size: {width: titleCardWidth, height: titleCardHeight},
         },
         {
             id: 'contact',
-            title: 'Contact',
-            body: '',
+            titleKey: 'cards.contact.title',
             position: getTitleCardPosition(4),
             size: {width: titleCardWidth, height: titleCardHeight},
         },
@@ -190,12 +191,14 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
         }
     }
 
+    const cardDataMap = useCardData();
+
     function getDetailCardElements(cardId: string | null) {
         if (!cardId) {
             console.log('Selected card has no Id!');
             return <></>;
         }
-        const cardData = getCardData(cardId);
+        const cardData = cardDataMap.get(cardId);
 
         if (!cardData) {
             console.log('Selected card has no data!');
@@ -231,14 +234,14 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
                         className='card-title-content'
                     >
                         <div className="card-title-text">
-                            <RevealText text={titleCard.title} 
+                            <RevealText text={t(titleCard.titleKey)}
                             textClass="card-title-text" 
                             autoStart={true}
                             durationPerChar={50}
                             durationNextChar={100}
                             initialDelay={5000}></RevealText>
 
-                            {titleCard.body !== '' && <RevealText text={titleCard.body} 
+                            {titleCard.bodyKey && <RevealText text={t(titleCard.bodyKey)} 
                             textClass="card-title-body" 
                             autoStart={true}
                             durationPerChar={50}
@@ -271,7 +274,7 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
                     X
             </button>
             <div style={{padding: '20px', paddingTop:'40px', textAlign:'center', height: '100%'}}>
-                {selectedCard ? (<></>) : (<p>No Card Selected</p>)}
+                {selectedCard ? (<></>) : (<p>{t('common.noCardSelected')}</p>)}
                 {selectedCard &&
                     getDetailCardElements(selectedCard)
                 }

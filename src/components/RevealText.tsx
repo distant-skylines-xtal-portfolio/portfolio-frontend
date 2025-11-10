@@ -43,6 +43,7 @@ export default function RevealText({
     const [displayedText, setDisplayedText] = React.useState(Array.from({length: text.length}, () => ""));
     //const [isAnimating, setIsAnimating] = React.useState(false);
     const [hasStarted, setHasStarted] = React.useState(false);
+    const hasPlayedInitialAnimation = useRef(false);
 
     const timersRef = useRef<timersRefType>({progress: undefined, scramblers: new Map()});
     const completedCharsRef = useRef<Set<number>>(new Set());
@@ -131,6 +132,7 @@ export default function RevealText({
                 processCharacter(charIndex + 1);
             }, nextCharDelay);
         };
+        console.log(`starting revealText anim on ${text}`);
 
         processCharacter(0);
     }, [text, numberOfScramblePerChar, durationPerChar, durationNextChar, revealMultipleChars, onComplete, onCharacterRevealed, hasStarted]);
@@ -154,7 +156,8 @@ export default function RevealText({
         const splitLength = joinedText.split('\n').length;
         return joinedText.split('\n').map((line, index) => {
             
-                return <p className={textClass}>
+                return <p className={textClass} key={`reveal-text-${index}-${Math.random()}`}
+                >
                     {line}
                     {index < splitLength && <br />}
                 </p>
@@ -165,13 +168,16 @@ export default function RevealText({
 
     useEffect(() => {
         if (autoStart && !shouldReduceMotion) {
+            const delay = hasPlayedInitialAnimation ? 0 : initialDelay;
+
             const timer = setTimeout(() => {
                 startAnimation();
-            }, initialDelay);
+                hasPlayedInitialAnimation.current = true;
+            }, delay);
             
             return () => clearTimeout(timer);
         }
-    }, [autoStart, initialDelay, startAnimation, shouldReduceMotion]);
+    }, [autoStart, initialDelay, startAnimation, shouldReduceMotion, hasPlayedInitialAnimation]);
     
     // Cleanup on unmount
     useEffect(() => {
