@@ -55,7 +55,7 @@ export default function DropdownCard({
 
     useEffect(() => {
         setSelectedOption(options[selectedOptionIndex]);
-    }, [options])
+    }, [selectedOptionIndex, options])
 
     useEffect(() => {
         if (!isOpen) {

@@ -64,8 +64,6 @@ export default function ExtraCards({cardId, ref}:ExtraCardsProps):JSX.Element {
             if (!isMountedRef.current) {
                 return;
             }
-            const cardCanvas = document.getElementById('card-canvas');
-            const boundingRect = cardCanvas?.getBoundingClientRect();
         }
 
         handleResize();

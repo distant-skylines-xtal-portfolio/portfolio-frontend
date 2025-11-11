@@ -1,6 +1,5 @@
 import {useState, useEffect} from 'react';
 import { ViewportType } from '../types/Layout.types';
-import { flushSync } from 'react-dom';
 
 
 export function useViewport() {

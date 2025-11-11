@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode } from 'react';
 import { ViewportType } from '../types/Layout.types';
 
 type LayoutTransitionProps = {

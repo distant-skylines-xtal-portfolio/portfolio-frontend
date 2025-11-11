@@ -1,4 +1,3 @@
-import type {JSX} from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
 import BackgroundHexagons from '../BackgroundHexagons';
 import BackgroundAnimatedGradient from '../BackgroundAnimatedGradient';

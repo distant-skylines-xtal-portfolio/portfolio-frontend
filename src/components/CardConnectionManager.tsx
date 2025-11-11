@@ -4,7 +4,7 @@ import ExpandableCard from "./ExpandableCard";
 import LineConnectionSVG from "./LineConnectionSVG";
 import RevealText from "./RevealText";
 import { Point } from "framer-motion";
-import { getCardData, useCardData } from "../data/DetailCardData";
+import { useCardData } from "../data/DetailCardData";
 import ExtraCards from "./ExtraCards";
 import { calculateDetailCardPosition, calculateDetailCardSize } from "../utils/cardPositioningUtils";
 import { useTranslation } from "react-i18next";
