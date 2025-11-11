@@ -7,14 +7,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 import BackgroundAnimatedGradient from './BackgroundAnimatedGradient';
 import BackgroundAnimatedCaustics from './BackgroundAnimatedCaustics';
 import BackgroundMatrixCharacters from './BackgroundMatrixCharacters';
+import { useViewport } from '../hooks/useViewport';
+import MobileBackgroundComponentManager from './mobile/MobileBackgroundComponentManager';
 
 export default function BackgroundComponentManager():JSX.Element {
 
     const {currentTheme, transitionState} = useTheme();
+    const {isMobile} = useViewport();
+
+    if (isMobile) {
+        return <MobileBackgroundComponentManager />;
+    }
 
     function getBackgroundComponents() {
         switch(currentTheme) {
-            case 'default':
+            case 'grey':
                 return (<>
                     <BackgroundAnimatedGradient 
                         zIndex={48}

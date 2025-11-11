@@ -8,6 +8,7 @@ import { getCardData, useCardData } from "../data/DetailCardData";
 import ExtraCards from "./ExtraCards";
 import { calculateDetailCardPosition, calculateDetailCardSize } from "../utils/cardPositioningUtils";
 import { useTranslation } from "react-i18next";
+import { useViewport } from "../hooks/useViewport";
 
 type cardConnectionManagerProps = {
     children?: React.ReactNode,
@@ -33,11 +34,20 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
     const titleCardRefs = useRef<Map<string, React.RefObject<ExpandableCardMethods | null>>>(new Map());
     const detailCardRef = useRef<ExpandableCardMethods>(null);
     const extraCardRef = useRef<ExtraCardMethods>(null);
+
+    /*  
+        Track if component is mounted to stop state updates after unmount, which can break
+        framer animations. The window resize event subscription can cause issues because 
+        of this. 
+    */
+    const isMountedRef = useRef(true);
+    const {isMobile} = useViewport();
     
     //Title card dimensions
     const titleCardWidth = 300;
     const titleCardHeight = 75;
     const titleCardGap = 12;
+
 
     const titleCards: titleCard[] = [
         {
@@ -83,12 +93,30 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
         return {x, y};
     }
 
+    useEffect(() => {
+        isMountedRef.current = true;
+        return () => {
+            isMountedRef.current = false;
+        }
+    }, []);
+
 
 
     // Use effect to calculate detail card position based on size of the card canvas
     useEffect(() => {
             const calculateDimensions = () => {
+                if (!isMountedRef.current) {
+                    return;
+                }
+
+                if (isMobile) {
+                    return;
+                }
+
                 const canvasElement = document.getElementById('card-canvas');
+                if (!canvasElement) {
+                    return;
+                }
                 const canvasRect = canvasElement?.getBoundingClientRect();
                 const newY = canvasRect ? canvasRect.height / 2 : window.innerHeight / 2;
                 const newSize = calculateDetailCardSize(titleCardWidth);
@@ -103,8 +131,8 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
             calculateDimensions();
             window.addEventListener('resize', calculateDimensions);
             
-            return () => window.removeEventListener('resize', calculateDimensions);
-    }, [titleCards.length]);
+            return () => {window.removeEventListener('resize', calculateDimensions)};
+    }, [isMobile]);
 
 
     //Get connection point for card
@@ -273,7 +301,13 @@ export default function CardConnectionManager({children}: cardConnectionManagerP
             >
                     X
             </button>
-            <div style={{padding: '20px', paddingTop:'40px', textAlign:'center', height: '100%'}}>
+            <div style={{
+                padding: '20px', 
+                paddingTop:'40px', 
+                textAlign:'center', 
+                height: '100%',
+                overflowY: 'auto',
+                }}>
                 {selectedCard ? (<></>) : (<p>{t('common.noCardSelected')}</p>)}
                 {selectedCard &&
                     getDetailCardElements(selectedCard)

@@ -3,13 +3,17 @@ import { motion } from "framer-motion";
 import Underline from './Underline';
 import CardConnectionManager from './CardConnectionManager';
 import DropdownCard from './DropdownCard';
+import MobileCardList from './mobile/MobileCardList';
 import { ThemeType, useTheme } from '../contexts/ThemeContext';
 import { Point } from '../types/ExpandableCard.types';
 import { useTranslation } from 'react-i18next';
+import { useViewport } from '../hooks/useViewport';
+import LayoutTransition from './LayoutTransition';
 
 export default function MainCard():JSX.Element {
     const {t, i18n} = useTranslation();
     const {setTheme} = useTheme();
+    const {viewport, isMobile} = useViewport();
 
     const dropdownCardWidth = 150;
     const dropdownCardGap = 25;
@@ -17,7 +21,7 @@ export default function MainCard():JSX.Element {
     function handleThemeChange(translatedTheme: string) {
 
         const themeMap: Record<string, ThemeType> = {
-            [t('themes.default')]: 'default',
+            [t('themes.grey')]: 'grey',
             [t('themes.dark')]: 'dark',
             [t('themes.blue')]: 'blue',
         }
@@ -43,12 +47,13 @@ export default function MainCard():JSX.Element {
     }
 
     return (
-        <motion.div className="card-base"
+        <motion.div 
+            className={`card-base ${isMobile ? 'card-base-mobile' : ''}`}
             initial={{opacity: 0, y: -50}}
             animate={{opacity: 1, y: 0}}
             transition={{duration: 1, delay:1}}
         >
-            <header>
+            <header className={isMobile ? 'header-mobile' : ''}>
                 <div className='header-title' style={{zIndex:100}}>
                     <Underline color="hsl(0, 0%, 100%)">
                         <h1>Evan McLay | Portfolio</h1>                    
@@ -71,14 +76,14 @@ export default function MainCard():JSX.Element {
                     <DropdownCard
                         cardKey='theme-dropdown'
                         options={[
-                            t('themes.default'), 
+                            t('themes.grey'), 
                             t('themes.dark'), 
                             t('themes.blue')
                         ]}
                         position={calculateDropdownPosition(0)}
                         cardWidth={250}
                         defaultText={t('header.selectTheme')}
-                        initialSelectedOption={0}
+                        initialSelectedOption={2}
                         alwaysDisplayDefaultText={true}
                         onOptionSelect={handleThemeChange}
                     ></DropdownCard>
@@ -95,12 +100,18 @@ export default function MainCard():JSX.Element {
                     ></DropdownCard>       
                 </div>
             </header>
-            <div className="card-base-container">
-                <div className="card-canvas" id="card-canvas">
-                    <CardConnectionManager></CardConnectionManager>
-                </div>
-
-                
+            <div className=
+                {`card-base-container ${isMobile ? 'card-base-container-mobile' : ''}`}
+            >
+                <LayoutTransition layoutKey={viewport}>
+                    {isMobile ? (
+                        <MobileCardList />
+                    ) : (
+                        <div className="card-canvas" id="card-canvas">
+                            <CardConnectionManager></CardConnectionManager>
+                        </div>
+                    )}
+                </LayoutTransition>
             </div>
         </motion.div>
         

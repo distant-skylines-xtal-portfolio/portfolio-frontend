@@ -310,6 +310,129 @@ svg {
   color: white;
 }
 
+
+/* Mobile Layout Styling*/
+@media (max-width: 767px) {
+  .card-base-mobile {
+    padding: 12px;
+  }
+
+  .header-mobile {
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 64px;
+  }
+
+  .header-title h1 {
+    font-size: 1.5rem;
+  }
+
+  .header-container h3 {
+    font-size: 1rem;
+  }
+
+  .card-base-container-mobile {
+    margin-top: 24px;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    padding-right: 24px;
+  }
+}
+
+.mobile-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0;
+  width: 100%;
+}
+
+.mobile-card-item {
+  border: 2px solid var(--color-secondary);
+  border-radius: 4px;
+  background-color: var(--color-background);
+  cursor: pointer;
+  user-select: none;
+  width: 100%
+}
+
+.mobile-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  min-height: 60px;
+}
+
+.mobile-card-title-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mobile-card-title-content h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.mobile-card-body {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-secondary);
+}
+
+
+.mobile-card-arrow {
+  font-size: 1.2rem;
+  color: var(--color-text);
+  margin-left: 12px;
+  flex-shrink: 0;
+}
+
+.mobile-card-detail {
+  border-top: 1px solid var(--color-secondary);
+}
+
+.mobile-card-detail-content {
+  padding: 16px;
+  color: var(--color-text);
+}
+
+/* Ensure touch targets are large enough */
+@media (max-width: 767px) {
+  .mobile-card-item {
+    min-height: 60px;
+  }
+  
+  /* Make links and buttons touch-friendly */
+  a, button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Detail card content adjustments for mobile */
+@media (max-width: 767px) {
+  .card-data-about,
+  .card-data-experience,
+  .card-data-contact {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .card-data-experience h3 {
+    font-size: 1rem;
+  }
+
+  .contact-block {
+    margin-bottom: 16px;
+  }
+}
+
+
 /* responsive iframe with a 16:9 aspect ratio
     thanks https://css-tricks.com/responsive-iframes/
 */

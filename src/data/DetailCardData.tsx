@@ -50,13 +50,13 @@ export function useCardData() {
                         </div>
                         <div className="contact-block">
                             <h3>{t('cards.contact.linkedin')} </h3>
-                            <a href="https://www.linkedin.com/in/evan-mclay-3642a0106" target="_blank" rel="noopener noreferrer" className="body-text">
+                            <a href="https://www.linkedin.com/in/evan-mclay-3642a0106" target="_blank" rel="noopener noreferrer" className="body-text-link">
                                 www.linkedin.com/in/evan-mclay-3642a0106
                             </a>
                         </div>
                         <div className="contact-block">
                             <h3>{t('cards.contact.github')} </h3>
-                            <a href="https://github.com/Distant-Skyline-Xtal" target="_blank" rel="noopener noreferrer" className="body-text">
+                            <a href="https://github.com/Distant-Skyline-Xtal" target="_blank" rel="noopener noreferrer" className="body-text-link">
                                 https://github.com/Distant-Skyline-Xtal
                             </a>
                         </div>

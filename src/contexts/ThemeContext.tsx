@@ -1,7 +1,7 @@
 import {createContext, useContext, useState, useEffect} from 'react';
 import {JSX} from 'react';
 
-export type ThemeType = 'default' | 'dark' | 'blue';
+export type ThemeType = 'grey' | 'dark' | 'blue';
 
 type TransitionState = 'idle' | 'fadeIn' | 'transitioning' | 'fadeOut';
 
@@ -19,7 +19,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({children}:ThemeProviderProps):JSX.Element {
 
-    const [currentTheme, setCurrentTheme] = useState<ThemeType>('default');
+    const [currentTheme, setCurrentTheme] = useState<ThemeType>('blue');
     const [transitionState, setTransitionState] = useState<TransitionState>('idle');
 
     function setTheme(newTheme: ThemeType) {
@@ -40,7 +40,7 @@ export function ThemeProvider({children}:ThemeProviderProps):JSX.Element {
         const root = document.documentElement;
 
         switch(currentTheme) {
-            case 'default':
+            case 'grey':
                 root.style.setProperty('--color-background', 'hsl(0, 0%, 30%)');
                 root.style.setProperty('--color-primary', 'hsl(0, 0%, 60%)');
                 root.style.setProperty('--color-secondary', 'hsl(0, 0%, 80%)');
@@ -49,7 +49,7 @@ export function ThemeProvider({children}:ThemeProviderProps):JSX.Element {
             case 'dark':
                 root.style.setProperty('--color-background', 'hsl(0, 0%, 10%)');
                 root.style.setProperty('--color-primary', 'hsla(130, 100%, 11%, 1.00)');
-                root.style.setProperty('--color-secondary', 'hsla(125, 100%, 12%, 1.00)');
+                root.style.setProperty('--color-secondary', 'hsla(125, 100%, 20%, 1.00)');
                 root.style.setProperty('--color-text', 'hsl(0, 0%, 90%)');
                 break;
             case 'blue':

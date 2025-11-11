@@ -13,6 +13,17 @@ export default function ExtraCards({cardId, ref}:ExtraCardsProps):JSX.Element {
 
     const extraCardRefs = useRef<Map<string, React.RefObject<ExpandableCardMethods | null>>>(new Map());
     const videoCardWidth = 360;
+
+    const isMountedRef = useRef(false);
+
+    useEffect(() => {
+        isMountedRef.current = true;
+        
+        return () => {
+            isMountedRef.current = false;
+        };
+    }, []);
+
     //Expose internal methods
     useEffect(() => {
         if (ref && 'current' in ref) {
@@ -50,10 +61,11 @@ export default function ExtraCards({cardId, ref}:ExtraCardsProps):JSX.Element {
 
     useEffect(() => {
         const handleResize = () => {
+            if (!isMountedRef.current) {
+                return;
+            }
             const cardCanvas = document.getElementById('card-canvas');
             const boundingRect = cardCanvas?.getBoundingClientRect();
-
-            console.log(`canvas rect width ${boundingRect?.width}, height: ${boundingRect?.height}`);
         }
 
         handleResize();
