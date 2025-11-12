@@ -1,4 +1,5 @@
 import {AnimatePresence, motion} from 'framer-motion';
+import RevealText from "../RevealText";
 
 import type {JSX} from 'react';
 import { useCardData } from '../../data/DetailCardData';
@@ -34,8 +35,24 @@ export default function MobileCardItem({
                 className="mobile-card-header" layout="position"
             >
                 <div className="mobile-card-title-content">
-                    <h3>{title}</h3>
-                    {body && <p className="mobile-card-body">{body}</p>}
+                    <RevealText 
+                        text={title} 
+                        textClass="mobile-card-title" 
+                        autoStart={true}
+                        durationPerChar={50}
+                        durationNextChar={100}
+                        initialDelay={2000}
+                    />
+                    {body && 
+                        <RevealText 
+                            text={title} 
+                            textClass="mobile-card-body" 
+                            autoStart={true}
+                            durationPerChar={50}
+                            durationNextChar={100}
+                            initialDelay={2000}
+                        />
+                    }
                 </div>
                 <motion.span
                     className="mobile-card-arrow"

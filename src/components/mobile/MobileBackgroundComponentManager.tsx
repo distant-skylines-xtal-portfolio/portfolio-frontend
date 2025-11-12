@@ -2,6 +2,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 import BackgroundHexagons from '../BackgroundHexagons';
 import BackgroundAnimatedGradient from '../BackgroundAnimatedGradient';
 import {motion, AnimatePresence} from 'framer-motion';
+import MobileBackgroundHexagons from './MobileBackgroundHexagons';
 
 export default function MobileBackgroundComponentManager() {
     const {currentTheme, transitionState} = useTheme();
@@ -16,7 +17,7 @@ export default function MobileBackgroundComponentManager() {
               animationSpeed='slow'
               gradientType='waves'
             />
-            <BackgroundHexagons zIndex={50} />
+            <MobileBackgroundHexagons zIndex={50} />
           </>
         );
       case 'dark':
@@ -46,7 +47,7 @@ export default function MobileBackgroundComponentManager() {
         <motion.div
           key={currentTheme}
           style={{
-            position: 'absolute',
+            position: 'fixed',
             left: 0,
             top: 0,
             width: '100%',

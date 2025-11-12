@@ -168,8 +168,7 @@ export default function RevealText({
 
     useEffect(() => {
         if (autoStart && !shouldReduceMotion) {
-            const delay = hasPlayedInitialAnimation ? 0 : initialDelay;
-
+            const delay = hasPlayedInitialAnimation.current ? 0 : initialDelay;
             const timer = setTimeout(() => {
                 startAnimation();
                 hasPlayedInitialAnimation.current = true;

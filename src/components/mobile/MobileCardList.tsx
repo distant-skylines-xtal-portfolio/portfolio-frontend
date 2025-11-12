@@ -11,7 +11,7 @@ type MobileCard = {
 
 export default function MobileCardList(): JSX.Element {
     const { t } = useTranslation();
-    const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
+    const [expandedCardId, setExpandedCardId] = useState<string | null>('about');
 
     const cards: MobileCard[] = [
         { id: 'about', titleKey: 'cards.about.title' },
@@ -22,7 +22,6 @@ export default function MobileCardList(): JSX.Element {
     ]
 
     function handleCardClick(cardID: string) {
-        console.log(`handleCardClick: ${cardID}`);
         setExpandedCardId(expandedCardId === cardID ? null: cardID);
     }
 

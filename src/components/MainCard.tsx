@@ -9,6 +9,7 @@ import { Point } from '../types/ExpandableCard.types';
 import { useTranslation } from 'react-i18next';
 import { useViewport } from '../hooks/useViewport';
 import LayoutTransition from './LayoutTransition';
+import MobileSettings from './mobile/MobileSettings';
 
 export default function MainCard():JSX.Element {
     const {t, i18n} = useTranslation();
@@ -47,6 +48,7 @@ export default function MainCard():JSX.Element {
     }
 
     return (
+    <LayoutTransition layoutKey={viewport}>
         <motion.div 
             className={`card-base ${isMobile ? 'card-base-mobile' : ''}`}
             initial={{opacity: 0, y: -50}}
@@ -73,37 +75,48 @@ export default function MainCard():JSX.Element {
                     </div>
                 </div>
                 <div className="dropdown-container">
-                    <DropdownCard
-                        cardKey='theme-dropdown'
-                        options={[
-                            t('themes.grey'), 
-                            t('themes.dark'), 
-                            t('themes.blue')
-                        ]}
-                        position={calculateDropdownPosition(0)}
-                        cardWidth={250}
-                        defaultText={t('header.selectTheme')}
-                        initialSelectedOption={2}
-                        alwaysDisplayDefaultText={true}
-                        onOptionSelect={handleThemeChange}
-                    ></DropdownCard>
-                    <DropdownCard
-                        cardKey='language-dropdown'
-                        options={[
-                            t('languages.english'), 
-                            t('languages.japanese')
-                        ]}
-                        position={calculateDropdownPosition(1)}
-                        cardWidth={dropdownCardWidth}
-                        initialSelectedOption={0}
-                        onOptionSelect={handleLanguageChange}
-                    ></DropdownCard>       
+                    {isMobile ? (
+                        <MobileSettings
+                            onThemeChange={handleThemeChange} 
+                            onLanguageChange={handleLanguageChange}
+                            initialTheme={2}
+                            initialLanguage={0}
+                        />
+                    ): (
+                        <>
+                        <DropdownCard
+                            cardKey='theme-dropdown'
+                            options={[
+                                t('themes.grey'), 
+                                t('themes.dark'), 
+                                t('themes.blue')
+                            ]}
+                            position={calculateDropdownPosition(0)}
+                            cardWidth={250}
+                            defaultText={t('header.selectTheme')}
+                            initialSelectedOption={2}
+                            alwaysDisplayDefaultText={true}
+                            onOptionSelect={handleThemeChange}
+                        ></DropdownCard>
+                        <DropdownCard
+                            cardKey='language-dropdown'
+                            options={[
+                                t('languages.english'), 
+                                t('languages.japanese')
+                            ]}
+                            position={calculateDropdownPosition(1)}
+                            cardWidth={dropdownCardWidth}
+                            initialSelectedOption={0}
+                            onOptionSelect={handleLanguageChange}
+                        ></DropdownCard>       
+                        </>
+                    )}
+
                 </div>
             </header>
             <div className=
                 {`card-base-container ${isMobile ? 'card-base-container-mobile' : ''}`}
             >
-                <LayoutTransition layoutKey={viewport}>
                     {isMobile ? (
                         <MobileCardList />
                     ) : (
@@ -111,9 +124,9 @@ export default function MainCard():JSX.Element {
                             <CardConnectionManager></CardConnectionManager>
                         </div>
                     )}
-                </LayoutTransition>
             </div>
         </motion.div>
+    </LayoutTransition>
         
     )
 }
