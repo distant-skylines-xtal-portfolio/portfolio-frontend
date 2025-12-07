@@ -53,7 +53,7 @@ export function ProjectInfo({
             </div>
             
             <div className="project-info-list">
-                <p>{t('common.tech')}</p>
+                {technologies.length > 0 && <p>{t('common.tech')}</p>}
                 {technologies.map((tech, index) => (
                     <span key={`${tech}-${index}`} className="project-info-pill">
                         {tech}

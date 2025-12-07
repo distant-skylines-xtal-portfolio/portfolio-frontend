@@ -84,12 +84,20 @@ export function useCardData() {
                 </div>
             )
         }],
-        ['projects-threejs', {
+        ['projects-threeJS', {
             data: (
                 <div className="card-data card-data-about" style={{textAlign: 'left'}}>
-                    <p className="body-text">
-                        To be added!
-                    </p>
+                    <h3>Three.JS Experiments</h3>
+                    
+                    <ProjectInfo
+                        title={'Card Carousel'}
+                        description={'Card carousel with holographic effect.'}
+                        links={[
+                            { label: "Webpage", url: "https://carousel-3d.vercel.app" },
+                        ]}
+                        technologies={[
+                            
+                        ]}/>
                 </div>
             )
         }],
