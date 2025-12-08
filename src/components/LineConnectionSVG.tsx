@@ -1,5 +1,6 @@
 import {motion} from "framer-motion";
 import { Connection, Point } from "../types/ExpandableCard.types";
+import { useTheme } from "../contexts/ThemeContext";
 
 type LineConnectionSVGProps = {
     connections: Connection[];
@@ -8,6 +9,8 @@ type LineConnectionSVGProps = {
 export default function LineConnectionSVG({
     connections
 }:LineConnectionSVGProps) {
+
+    const {currentTheme} = useTheme();
 
     function CalculatePath(from: Point, to: Point): string {
         
@@ -22,6 +25,8 @@ export default function LineConnectionSVG({
                     L ${to.x} ${to.y}`;
         }
     };
+
+    const strokeColor = currentTheme === 'dark' ? 'white' : 'black';
 
     return (
         <svg 
@@ -42,7 +47,7 @@ export default function LineConnectionSVG({
                         <motion.path
                             key={`connection-${index}`}
                             d={pathData}
-                            stroke="black"
+                            stroke={strokeColor}
                             strokeWidth={2}
                             fill="none"
                             initial={{pathLength: 0}}

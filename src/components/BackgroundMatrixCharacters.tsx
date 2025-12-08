@@ -108,7 +108,7 @@ export default function BackgroundMatrixCharacters({
                     const charId = `matrix-char-${Date.now()}-${Math.random()}`;
                     const newChar: MatrixChar = {
                         id: charId,
-                        char: getRandomCharEng(true),
+                        char: getRandomChar(),
                         createdAt: currentTime,
                         opacity: 1,
                         y: column.currentY - dropDistance,
@@ -161,7 +161,7 @@ export default function BackgroundMatrixCharacters({
         animationFrameRef.current = requestAnimationFrame(animate);
         
     }, [spawnInterval, dropInterval, dropDistance, fadeOutDuration, fontSize, maxColumns, 
-        textColor, caretColor, textColorRGB
+        caretColor,
     ]);
 
     //Setup canvas and start animation
