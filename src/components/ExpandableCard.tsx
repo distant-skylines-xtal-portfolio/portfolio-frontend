@@ -43,6 +43,7 @@ export default function ExpandableCard({children,
     const [isExpanded, setIsExpanded] = React.useState(false);
     const [expansionComplete, setExpansionComplete] = React.useState(false);
     const [clickWaves, setClickWaves] = React.useState<WaveAnimation[]>([]);
+    const [isHovering, setIsHovering] = React.useState(false);
 
     const borderOffset = 5;
     const waveAnimLength = 1.5;
@@ -98,6 +99,14 @@ export default function ExpandableCard({children,
         onCardClick?.()
     }
 
+    function handleHoverStart() {
+        setIsHovering(true);
+    }
+
+    function handleHoverEnd() {
+        setIsHovering(false);
+    }
+
     return (
         <motion.div className='card-expandable-border' 
             style={{
@@ -131,6 +140,8 @@ export default function ExpandableCard({children,
             transition={{duration: animDuration, delay: isExpanded? animDelay : animDuration}}
 
             onClick={handleCardClick}
+            onHoverStart={handleHoverStart}
+                    onHoverEnd={handleHoverEnd}
             
         >
             
@@ -160,10 +171,11 @@ export default function ExpandableCard({children,
 
             {/* Hover & click border */}
             {
-                expansionComplete && usePointerEvents && (
+                expansionComplete && usePointerEvents && isHovering && (
                 <motion.div 
                     key={`hover-border-${Math.random()}`}
                     id={`hover-border-${Math.random()}`}
+                    
                     style={{
                         position: 'absolute',
                         left: 0,
@@ -184,7 +196,7 @@ export default function ExpandableCard({children,
                         transition: {repeat: Infinity, repeatType: "reverse", duration: 0.5,
                         }
                     }}
-                    transition={{duration: 0.2, ease:'linear'}}
+                    transition={{duration: 0.2, ease:'linear', repeat: 0}}
                 >
 
                 </motion.div>

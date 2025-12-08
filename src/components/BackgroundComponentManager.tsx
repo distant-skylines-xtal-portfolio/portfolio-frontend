@@ -40,7 +40,7 @@ export default function BackgroundComponentManager():JSX.Element {
                     gradientType='mesh'
                     animationSpeed='fast'
                 />
-                <BackgroundMatrixCharacters zIndex={51} />
+                <BackgroundMatrixCharacters zIndex={51} maxColumns={30} spawnInterval={300}/>
                 </>)
             case 'blue':
                 return (<>

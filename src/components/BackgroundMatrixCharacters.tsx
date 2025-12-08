@@ -48,7 +48,14 @@ export default function BackgroundMatrixCharacters({
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const columnsRef = useRef<Map<string, MatrixColumn>>(new Map());
 
-    const textColorRGB = hexToRgb(textColor);
+    const textColorRGB = useRef(hexToRgb(textColor));
+    const textColorRGBString = useRef(`${textColorRGB.current.r}, ${textColorRGB.current.g}, ${textColorRGB.current.b}`);
+
+    const charPoolRef = useRef<string[]>([]);
+
+    useEffect(() => {
+        charPoolRef.current = Array.from({length: 100}, () => getRandomCharEng(true));
+    }, []);
 
     const animate = useCallback((currentTime: number):void => {
         const canvas = canvasRef.current;
@@ -63,6 +70,10 @@ export default function BackgroundMatrixCharacters({
             const numColumns = Math.floor(canvasRef.current.width / fontSize);
             const randomX = Math.floor(Math.random() * (numColumns + 1)) * fontSize;
             return randomX;
+        }
+
+        function getRandomChar(): string {
+            return charPoolRef.current[Math.floor(Math.random() * charPoolRef.current.length)];
         }
 
         //Spawn new column if time is over interval
@@ -83,6 +94,8 @@ export default function BackgroundMatrixCharacters({
 
         //Move columns and spawn text
         const columnsToDelete: string[] = [];
+
+        ctx.shadowBlur = 0;
 
         columnsRef.current.forEach((column, id) => {
             //move column if greater than drop interval
@@ -105,38 +118,43 @@ export default function BackgroundMatrixCharacters({
                 }
             }
 
+            const visibleChars: MatrixChar[] = [];
+
             //Render and cull chars
             column.characters = column.characters.filter(char => {
                 const age = currentTime - char.createdAt;
                 char.opacity = Math.max(0, 1 - (age / fadeOutDuration));
 
-                //Render char if visible
                 if (char.opacity > 0) {
-                    ctx.fillStyle = `rgba(${textColorRGB.r}, ${textColorRGB.g}, ${textColorRGB.b}, ${char.opacity})`;
-                    ctx.shadowColor = textColor;
-                    ctx.shadowBlur = 5 * char.opacity;
-                    ctx.fillText(char.char, column.x, char.y);
-                    ctx.shadowBlur = 0;
+                    visibleChars.push(char);
                     return true;
                 }
-
-                //otherwise filter from list
                 return false;
-            })
+            });
 
-            //Render Caret
+            // Render all characters in this column with same settings
+            if (visibleChars.length > 0) {
+                visibleChars.forEach(char => {
+                    const roundedOpacity = Math.round(char.opacity * 10) / 10;
+                    ctx.fillStyle = `rgba(${textColorRGBString.current}, ${roundedOpacity})`;
+                    
+                    ctx.fillText(char.char, column.x, char.y);
+                });
+            }
+
+            // Render Caret with shadow (only one per column)
             if (column.currentY <= canvas.height) {
                 ctx.fillStyle = caretColor;
                 ctx.shadowColor = caretColor;
                 ctx.shadowBlur = 10;
                 ctx.fillRect(column.x, column.currentY, fontSize, fontSize);
-                ctx.shadowBlur = 0;
+                ctx.shadowBlur = 0; // Reset immediately
             }
 
             if (column.currentY > canvas.height + 100 && column.characters.length === 0) {
                 columnsToDelete.push(id);
             }
-        })
+        });
 
         columnsToDelete.forEach(id => columnsRef.current.delete(id));
 
@@ -150,6 +168,13 @@ export default function BackgroundMatrixCharacters({
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
+
+        const ctx = canvas.getContext('2d', {
+            alpha: true,
+            desynchronized: true,
+            willReadFrequently: false
+        });
+        if (!ctx) return;
 
         const updateCanvasSize = () => {
             canvas.width = window.innerWidth;
@@ -180,7 +205,9 @@ export default function BackgroundMatrixCharacters({
                 width: '100%',
                 height: '100%',
                 pointerEvents: 'none',
-                zIndex
+                zIndex,
+                transform: 'translateZ(0)',
+                willChange: 'transform',
             }} 
         />
     )
